@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Pakistan Holidays Hub — 2026–2027</title>
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json"/>
+  <meta name="theme-color" content="#1a5c38"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="School Hub"/>
+  <link rel="apple-touch-icon" href="./icons/icon-192.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    /* ─── CSS Variables ─────────────────────────────── */
+    :root {
+      --g:      #1a5c38;
+      --g2:     #2a7a4e;
+      --gd:     #0f3d25;
+      --gold:   #c8a84b;
+      --goldl:  #e0c06a;
+      --goldd:  #a08030;
+      --cream:  #faf7f0;
+      --white:  #ffffff;
+      --td:     #1a1a1a;
+      --tm:     #4a4a4a;
+      --tl:     #888888;
+      --sh:     0 4px 24px rgba(26,92,56,.10);
+      --sh2:    0 8px 36px rgba(26,92,56,.18);
+      --c-fed:  #c8a84b;
+      --c-isl:  #1a5c38;
+      --c-pro:  #7c4dbd;
+      --c-sch:  #1976d2;
+    }
+
+    /* ─── Reset ─────────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family:'Source Sans 3',sans-serif;
+      background:var(--cream);
+      color:var(--td);
+      min-height:100vh;
+    }
+
+    /* ─── Header ─────────────────────────────────────── */
+    header {
+      background:linear-gradient(140deg, var(--gd) 0%, var(--g) 55%, var(--g2) 100%);
+      position:relative;
+      overflow:hidden;
+    }
+    .hdr-ornament {
+      position:absolute; inset:0; opacity:.09; pointer-events:none;
+    }
+    .hdr-inner {
+      position:relative; z-index:1;
+      max-width:1300px; margin:0 auto;
+      padding:2.2rem 2rem 1.8rem;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:1.5rem; flex-wrap:wrap;
+    }
+    .hdr-left  { display:flex; align-items:center; gap:1.4rem; }
+    .hdr-right { display:flex; gap:.8rem; flex-wrap:wrap; }
+
+    /* Crescent + Star */
+    .crescent-wrap { width:62px; height:62px; flex-shrink:0; }
+    .crescent-svg  { animation:cPulse 3.2s ease-in-out infinite; }
+    @keyframes cPulse {
+      0%,100% { transform:scale(1) rotate(0deg); filter:brightness(1); }
+      50%      { transform:scale(1.07) rotate(6deg); filter:brightness(1.25); }
+    }
+
+    .hdr-title h1 {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(1.55rem,3vw,2.3rem);
+      color:#fff; font-weight:700; line-height:1.15;
+      letter-spacing:-.01em;
+    }
+    .hdr-title p {
+      color:var(--goldl); font-size:.9rem; font-weight:300;
+      letter-spacing:.06em; margin-top:.25rem;
+    }
+
+    /* Buttons */
+    .btn {
+      padding:.58rem 1.15rem; border-radius:7px; border:none; cursor:pointer;
+      font-family:'Source Sans 3',sans-serif; font-size:.88rem; font-weight:600;
+      display:inline-flex; align-items:center; gap:.45rem;
+      transition:all .22s ease; white-space:nowrap;
+    }
+    .btn-gold  { background:var(--gold); color:var(--gd); }
+    .btn-gold:hover { background:var(--goldl); transform:translateY(-2px); box-shadow:0 5px 14px rgba(200,168,75,.35); }
+    .btn-ghost { background:transparent; color:var(--goldl); border:1.5px solid rgba(200,168,75,.6); }
+    .btn-ghost:hover { background:rgba(200,168,75,.1); transform:translateY(-2px); }
+
+    /* Ornament divider */
+    .gold-bar {
+      height:3px;
+      background:linear-gradient(90deg,transparent,var(--gold),var(--goldl),var(--gold),transparent);
+    }
+
+    /* ─── Legend strip ───────────────────────────────── */
+    .legend-strip {
+      background:#fff; display:flex; gap:1.5rem; flex-wrap:wrap;
+      padding:.7rem 2rem; border-bottom:1px solid #ebebeb;
+      font-size:.8rem; color:var(--tm);
+    }
+    .leg-item { display:flex; align-items:center; gap:.4rem; }
+    .leg-dot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+    /* ─── Countdown banner ───────────────────────────── */
+    .countdown-banner {
+      background:linear-gradient(135deg, var(--gd), var(--g));
+      display:flex; align-items:center; justify-content:center;
+      gap:2.5rem; flex-wrap:wrap; padding:1.1rem 2rem;
+    }
+    .cd-label  { font-family:'Playfair Display',serif; font-size:.95rem; color:var(--goldl); }
+    .cd-name   { font-size:1.05rem; font-weight:600; color:#fff; margin-top:.15rem; }
+    .cd-units  { display:flex; gap:1.2rem; }
+    .cd-unit   { text-align:center; }
+    .cd-num    {
+      font-family:'Playfair Display',serif;
+      font-size:2rem; font-weight:700; color:var(--gold);
+      display:block; line-height:1;
+    }
+    .cd-text   { font-size:.65rem; color:rgba(255,255,255,.65); text-transform:uppercase; letter-spacing:.06em; }
+
+    /* ─── Sticky controls ────────────────────────────── */
+    .controls {
+      background:#fff; padding:.85rem 2rem;
+      display:flex; align-items:center; gap:.8rem; flex-wrap:wrap;
+      box-shadow:0 2px 12px rgba(0,0,0,.06);
+      position:sticky; top:0; z-index:200;
+    }
+    .ctrl-search {
+      flex:1; min-width:200px; padding:.55rem 1rem;
+      border:2px solid #e5e5e5; border-radius:8px;
+      font-family:'Source Sans 3',sans-serif; font-size:.92rem; outline:none;
+      transition:border-color .2s;
+    }
+    .ctrl-search:focus { border-color:var(--g); }
+    .ctrl-select {
+      padding:.55rem 1rem; border:2px solid #e5e5e5; border-radius:8px;
+      font-family:'Source Sans 3',sans-serif; font-size:.92rem;
+      outline:none; background:#fff; cursor:pointer; min-width:145px;
+    }
+    .ctrl-select:focus { border-color:var(--g); }
+    .view-tgl { display:flex; border:2px solid #e5e5e5; border-radius:8px; overflow:hidden; }
+    .vtgl-btn {
+      padding:.45rem 1rem; border:none; background:#fff; cursor:pointer;
+      font-size:1rem; transition:all .2s; line-height:1;
+    }
+    .vtgl-btn.active { background:var(--g); color:#fff; }
+    .vtgl-btn:hover:not(.active) { background:var(--cream); }
+
+    /* ─── Main container ─────────────────────────────── */
+    .main { max-width:1300px; margin:0 auto; padding:2rem; }
+
+    /* ─── API key notice ─────────────────────────────── */
+    .apikey-box {
+      background:rgba(200,168,75,.08); border:1.5px solid var(--gold);
+      border-radius:9px; padding:1rem 1.4rem; margin-bottom:1.5rem;
+      display:none; align-items:center; gap:1rem; flex-wrap:wrap;
+    }
+    .apikey-box label { font-weight:600; color:var(--gd); font-size:.88rem; white-space:nowrap; }
+    .apikey-input {
+      flex:1; min-width:220px; padding:.5rem .8rem;
+      border:1.5px solid #ddd; border-radius:6px;
+      font-family:monospace; font-size:.85rem; outline:none;
+    }
+    .apikey-input:focus { border-color:var(--g); }
+
+    /* ─── Skeleton ───────────────────────────────────── */
+    #skeletonLoader { padding:.5rem 0; }
+    .sk-row { display:flex; gap:.5rem; margin-bottom:1.4rem; }
+    .sk {
+      background:linear-gradient(90deg,#f0f0f0 25%,#e6e6e6 50%,#f0f0f0 75%);
+      background-size:200% 100%; animation:shimmer 1.6s infinite; border-radius:8px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .sk-tab  { height:42px; width:130px; }
+    .sk-hdr  { height:64px; margin-bottom:1.2rem; }
+    .sk-card { height:118px; flex:1; min-width:260px; border-radius:10px; }
+    .sk-cards { display:flex; flex-wrap:wrap; gap:1rem; }
+
+    /* ─── Province tabs ──────────────────────────────── */
+    #tabsWrap { display:none; }
+    .prov-tabs { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1.8rem; }
+    .ptab {
+      padding:.72rem 1.4rem; border:2px solid #e2e2e2; background:#fff;
+      border-radius:10px 10px 0 0; cursor:pointer;
+      font-family:'Source Sans 3',sans-serif; font-size:.93rem; font-weight:600;
+      color:var(--tm); transition:all .25s;
+    }
+    .ptab:first-child {
+      padding:.82rem 1.9rem; font-size:1.02rem;
+      border-color:var(--g); color:var(--g);
+    }
+    .ptab.active {
+      background:var(--g); color:#fff; border-color:var(--g);
+    }
+    .ptab:first-child.active {
+      background:linear-gradient(135deg,var(--gd),var(--g));
+    }
+    .ptab:hover:not(.active) { border-color:var(--g); color:var(--g); background:rgba(26,92,56,.04); }
+
+    /* Tab content */
+    .tcontent { display:none; animation:fadeUp .38s ease; }
+    .tcontent.active { display:block; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+    /* Province header */
+    .prov-hdr {
+      background:#fff; border-radius:12px; padding:1.4rem 1.8rem;
+      margin-bottom:1.6rem; box-shadow:var(--sh);
+      border-left:5px solid var(--g);
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+    }
+    .prov-hdr-name {
+      font-family:'Playfair Display',serif;
+      font-size:1.85rem; color:var(--gd); font-weight:700;
+    }
+    .prov-hdr-sub { color:var(--tl); font-size:.83rem; margin-top:.2rem; }
+    .prov-stats { display:flex; gap:1.6rem; }
+    .stat { text-align:center; }
+    .stat-n { font-size:1.55rem; font-weight:700; color:var(--g); display:block; }
+    .stat-l { font-size:.7rem; color:var(--tl); text-transform:uppercase; letter-spacing:.05em; }
+
+    /* Category section */
+    .cat-section { margin-bottom:2rem; }
+    .cat-hdr {
+      display:flex; align-items:center; gap:.7rem;
+      padding:.7rem 1rem; background:#fff; border-radius:8px;
+      box-shadow:0 2px 8px rgba(0,0,0,.05); margin-bottom:.9rem;
+    }
+    .cat-icon  { font-size:1.4rem; }
+    .cat-title {
+      font-family:'Playfair Display',serif;
+      font-size:1.15rem; color:var(--td); font-weight:600;
+    }
+    .cat-count {
+      margin-left:auto; background:var(--cream); padding:.2rem .7rem;
+      border-radius:20px; font-size:.78rem; color:var(--tm); font-weight:600;
+    }
+
+    /* Cards grid */
+    .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(295px,1fr)); gap:1rem; }
+
+    /* Holiday card */
+    .hcard {
+      background:#fff; border-radius:10px; padding:1.2rem 1.3rem;
+      box-shadow:var(--sh); border-left:4px solid var(--g);
+      transition:all .28s ease; position:relative; overflow:hidden;
+    }
+    .hcard::after {
+      content:''; position:absolute; inset:0;
+      background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a5c38' fill-opacity='0.025'%3E%3Cpath d='M40 0l8 8-8 8-8-8zM0 40l8-8 8 8-8 8zM80 40l-8-8-8 8 8 8zM40 80l8-8-8-8-8 8z'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events:none;
+    }
+    .hcard:hover { transform:translateY(-4px); box-shadow:var(--sh2); }
+    .hcard.federal   { border-left-color:var(--c-fed); }
+    .hcard.islamic   { border-left-color:var(--c-isl); }
+    .hcard.provincial{ border-left-color:var(--c-pro); }
+    .hcard.school    { border-left-color:var(--c-sch); }
+    .hcard.next-up::before {
+      content:'▶ UP NEXT'; position:absolute; top:0; right:0;
+      background:var(--gold); color:var(--gd); font-size:.6rem; font-weight:700;
+      letter-spacing:.06em; padding:.25rem .55rem; border-radius:0 0 0 6px;
+    }
+
+    .card-date { font-size:.75rem; color:var(--tl); font-weight:500; letter-spacing:.04em; text-transform:uppercase; margin-bottom:.35rem; }
+    .card-name { font-family:'Playfair Display',serif; font-size:1.03rem; color:var(--td); font-weight:600; line-height:1.3; margin-bottom:.45rem; }
+    .card-badge {
+      display:inline-flex; align-items:center; gap:.28rem;
+      padding:.18rem .58rem; border-radius:20px;
+      font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin-bottom:.5rem;
+    }
+    .badge-federal    { background:rgba(200,168,75,.15); color:#8a6910; }
+    .badge-islamic    { background:rgba(26,92,56,.12); color:var(--gd); }
+    .badge-provincial { background:rgba(124,77,189,.12); color:#5c2d91; }
+    .badge-school     { background:rgba(25,118,210,.12); color:#0d47a1; }
+    .card-desc { font-size:.86rem; color:var(--tm); line-height:1.55; }
+
+    /* ─── Calendar view ──────────────────────────────── */
+    #calView { display:none; }
+    #calView.active { display:block; }
+    .cal-nav {
+      display:flex; align-items:center; justify-content:space-between;
+      background:#fff; padding:1rem 1.5rem; border-radius:10px;
+      box-shadow:var(--sh); margin-bottom:1.2rem;
+    }
+    .cal-nav h3 {
+      font-family:'Playfair Display',serif;
+      font-size:1.35rem; color:var(--gd);
+    }
+    .cal-nbtn {
+      background:var(--g); color:#fff; border:none; width:36px; height:36px;
+      border-radius:50%; cursor:pointer; font-size:1.1rem;
+      display:flex; align-items:center; justify-content:center;
+      transition:background .2s;
+    }
+    .cal-nbtn:hover { background:var(--gd); }
+    .cal-grid { background:#fff; border-radius:12px; overflow:hidden; box-shadow:var(--sh); }
+    .cal-weekdays {
+      display:grid; grid-template-columns:repeat(7,1fr); background:var(--g);
+    }
+    .cal-weekdays span {
+      padding:.7rem; text-align:center; color:#fff;
+      font-weight:600; font-size:.82rem; letter-spacing:.04em;
+    }
+    .cal-body { display:grid; grid-template-columns:repeat(7,1fr); }
+    .cal-cell {
+      min-height:88px; padding:.5rem; border:1px solid #f2f2f2;
+      transition:background .2s;
+    }
+    .cal-cell:hover { background:rgba(26,92,56,.03); }
+    .cal-cell.other  { background:#fafafa; opacity:.45; }
+    .cal-cell.today  { background:rgba(26,92,56,.06); }
+    .cal-cell.today .cal-dn { color:var(--g); font-weight:700; }
+    .cal-dn { font-size:.82rem; font-weight:600; color:var(--tm); margin-bottom:.25rem; }
+    .cal-dot {
+      display:block; font-size:.62rem; padding:.1rem .3rem;
+      border-radius:3px; margin-bottom:.12rem;
+      overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor:default;
+    }
+    .dot-federal    { background:rgba(200,168,75,.2);  color:#8a6910; }
+    .dot-islamic    { background:rgba(26,92,56,.15);   color:var(--gd); }
+    .dot-provincial { background:rgba(124,77,189,.15); color:#5c2d91; }
+    .dot-school     { background:rgba(25,118,210,.15); color:#0d47a1; }
+
+    /* ─── No results ─────────────────────────────────── */
+    .no-results { text-align:center; padding:2.5rem; color:var(--tl); font-style:italic; }
+
+    /* ─── Toast ──────────────────────────────────────── */
+    .toast {
+      position:fixed; bottom:2rem; right:2rem; z-index:9999;
+      background:var(--gd); color:#fff; padding:.9rem 1.4rem;
+      border-radius:9px; font-size:.88rem; box-shadow:0 8px 24px rgba(0,0,0,.22);
+      transform:translateY(120px); opacity:0; transition:all .3s ease;
+      max-width:320px; pointer-events:none;
+    }
+    .toast.show { transform:translateY(0); opacity:1; }
+
+    /* ─── Footer ─────────────────────────────────────── */
+    .foot {
+      background:#fff; border-top:1px solid #ebebeb;
+      padding:.6rem 2rem; font-size:.75rem; color:var(--tl);
+      display:flex; justify-content:space-between; flex-wrap:wrap; gap:.5rem;
+    }
+
+    /* ─── Responsive ─────────────────────────────────── */
+    @media(max-width:768px) {
+      .hdr-inner   { padding:1.5rem 1rem; }
+      .main        { padding:1rem; }
+      .controls    { padding:.7rem 1rem; }
+      .prov-hdr    { padding:1rem 1.2rem; }
+      .prov-stats  { display:none; }
+      .countdown-banner { flex-direction:column; gap:.8rem; padding:1rem; }
+      .cards-grid  { grid-template-columns:1fr; }
+      .cal-cell    { min-height:60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════ HEADER ════════════════════ -->
+<header>
+  <!-- Islamic geometric tile pattern overlay -->
+  <svg class="hdr-ornament" viewBox="0 0 1200 200" preserveAspectRatio="xMidYMid slice"
+       xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="tile" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+        <!-- Outer hexagon -->
+        <polygon points="40,2 72,20 72,58 40,76 8,58 8,20"
+          fill="none" stroke="white" stroke-width="1"/>
+        <!-- Inner hexagon -->
+        <polygon points="40,14 62,26 62,52 40,64 18,52 18,26"
+          fill="none" stroke="white" stroke-width=".6"/>
+        <!-- Corner stars -->
+        <polygon points="0,0 6,3 0,6 -6,3" fill="white"/>
+        <polygon points="80,0 86,3 80,6 74,3" fill="white"/>
+        <polygon points="0,80 6,83 0,86 -6,83" fill="white"/>
+        <polygon points="80,80 86,83 80,86 74,83" fill="white"/>
+        <!-- Connecting lines -->
+        <line x1="0" y1="0" x2="8" y2="20" stroke="white" stroke-width=".5"/>
+        <line x1="80" y1="0" x2="72" y2="20" stroke="white" stroke-width=".5"/>
+        <line x1="0" y1="80" x2="8" y2="58" stroke="white" stroke-width=".5"/>
+        <line x1="80" y1="80" x2="72" y2="58" stroke="white" stroke-width=".5"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#tile)"/>
+    <!-- Extra star clusters on the sides -->
+    <g fill="white" opacity=".5">
+      <polygon points="60,100 65,112 78,112 68,120 72,133 60,125 48,133 52,120 42,112 55,112"/>
+      <polygon points="1140,100 1145,112 1158,112 1148,120 1152,133 1140,125 1128,133 1132,120 1122,112 1135,112"/>
+    </g>
+  </svg>
+
+  <div class="hdr-inner">
+    <div class="hdr-left">
+      <!-- Animated Crescent + Star (Pakistan flag motif) -->
+      <div class="crescent-wrap">
+        <svg class="crescent-svg" width="62" height="62" viewBox="0 0 62 62"
+             xmlns="http://www.w3.org/2000/svg">
+          <!-- Moon -->
+          <path d="M31 4
+            C17 4, 6 15, 6 31
+            C6 47, 17 58, 31 58
+            C22 53, 16 43, 16 31
+            C16 19, 22 9, 31 4Z"
+            fill="#c8a84b"/>
+          <!-- Star — 5-pointed -->
+          <polygon
+            points="43,18 45.2,24.8 52.4,24.8 46.6,29 48.8,35.8 43,31.6 37.2,35.8 39.4,29 33.6,24.8 40.8,24.8"
+            fill="#c8a84b"/>
+        </svg>
+      </div>
+      <div class="hdr-title">
+        <a href="./index.html" style="display:inline-flex;align-items:center;gap:.3rem;color:rgba(255,255,255,.65);text-decoration:none;font-size:.75rem;font-weight:600;padding:.25rem .6rem;border-radius:6px;border:1px solid rgba(255,255,255,.2);margin-bottom:.5rem;transition:all .2s" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='none'">‹ Home</a>
+        <h1>Pakistan Holidays Hub</h1>
+        <p>Complete Provincial Holiday Calendar &nbsp;✦&nbsp; 2026 – 2027</p>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <button class="btn btn-ghost" onclick="refreshData()">
+        <span id="rfIcon">🔄</span> Refresh Data
+      </button>
+      <button class="btn btn-gold" onclick="downloadPDF()">
+        📥 Download PDF
+      </button>
+    </div>
+  </div>
+</header>
+<div class="gold-bar"></div>
+
+<!-- Legend -->
+<div class="legend-strip">
+  <div class="leg-item"><div class="leg-dot" style="background:var(--c-fed)"></div>Federal / National</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--c-isl)"></div>Islamic / Religious</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--c-pro)"></div>Provincial / Local</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--c-sch)"></div>School / Education</div>
+</div>
+
+<!-- ════════════════════ COUNTDOWN ════════════════════ -->
+<div class="countdown-banner">
+  <div>
+    <div class="cd-label">⏳ Next Punjab Holiday</div>
+    <div class="cd-name" id="cdName">Loading…</div>
+  </div>
+  <div class="cd-units">
+    <div class="cd-unit"><span class="cd-num" id="cdD">--</span><span class="cd-text">Days</span></div>
+    <div class="cd-unit"><span class="cd-num" id="cdH">--</span><span class="cd-text">Hours</span></div>
+    <div class="cd-unit"><span class="cd-num" id="cdM">--</span><span class="cd-text">Mins</span></div>
+    <div class="cd-unit"><span class="cd-num" id="cdS">--</span><span class="cd-text">Secs</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════ CONTROLS ════════════════════ -->
+<div class="controls">
+  <span style="font-weight:700;color:var(--g);font-size:1.1rem">🔍</span>
+  <input  class="ctrl-search"  id="searchIn"  type="text"
+          placeholder="Search by name or keyword…" oninput="filterCards()">
+  <select class="ctrl-select"  id="monthSel"  onchange="filterCards()">
+    <option value="">All Months</option>
+    <option value="01">January</option><option value="02">February</option>
+    <option value="03">March</option><option value="04">April</option>
+    <option value="05">May</option><option value="06">June</option>
+    <option value="07">July</option><option value="08">August</option>
+    <option value="09">September</option><option value="10">October</option>
+    <option value="11">November</option><option value="12">December</option>
+  </select>
+  <div class="view-tgl">
+    <button class="vtgl-btn active" id="btnList" onclick="setView('list')" title="List view">☰</button>
+    <button class="vtgl-btn"        id="btnCal"  onclick="setView('cal')"  title="Calendar view">📅</button>
+  </div>
+</div>
+
+<!-- ════════════════════ MAIN ════════════════════ -->
+<div class="main">
+
+  <!-- API key fallback -->
+  <div class="apikey-box" id="apikeyBox">
+    <label>🔑 Anthropic API Key:</label>
+    <input class="apikey-input" id="apiKeyIn" type="password"
+           placeholder="sk-ant-api03-…  (leave blank if auto-injected)">
+    <button class="btn btn-gold" onclick="refreshData()">Fetch Live Data</button>
+  </div>
+
+  <!-- Skeleton loader -->
+  <div id="skeletonLoader">
+    <div class="sk-row">
+      <div class="sk sk-tab"></div><div class="sk sk-tab"></div>
+      <div class="sk sk-tab"></div><div class="sk sk-tab"></div>
+    </div>
+    <div class="sk sk-hdr"></div>
+    <div class="sk-cards">
+      <div class="sk sk-card"></div><div class="sk sk-card"></div>
+      <div class="sk sk-card"></div><div class="sk sk-card"></div>
+      <div class="sk sk-card"></div><div class="sk sk-card"></div>
+    </div>
+  </div>
+
+  <!-- Province tabs + content -->
+  <div id="tabsWrap">
+    <!-- Tab buttons -->
+    <div class="prov-tabs">
+      <button class="ptab active" onclick="switchTab('punjab')">🏛️ Punjab</button>
+      <button class="ptab"        onclick="switchTab('sindh')">🌊 Sindh</button>
+      <button class="ptab"        onclick="switchTab('kpk')">🏔️ KPK</button>
+      <button class="ptab"        onclick="switchTab('balochistan')">🌿 Balochistan</button>
+    </div>
+
+    <!-- List view -->
+    <div id="listView">
+      <div class="tcontent active" id="tab-punjab"></div>
+      <div class="tcontent"        id="tab-sindh"></div>
+      <div class="tcontent"        id="tab-kpk"></div>
+      <div class="tcontent"        id="tab-balochistan"></div>
+    </div>
+
+    <!-- Calendar view -->
+    <div id="calView">
+      <div class="cal-nav">
+        <button class="cal-nbtn" onclick="shiftMonth(-1)">&#8249;</button>
+        <h3 id="calTitle">January 2025</h3>
+        <button class="cal-nbtn" onclick="shiftMonth(1)">&#8250;</button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-weekdays">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
+          <span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div class="cal-body" id="calBody"></div>
+      </div>
+    </div>
+
+  </div><!-- /tabsWrap -->
+</div><!-- /main -->
+
+<!-- Footer -->
+<div class="foot">
+  <span>Pakistan Holidays Hub &nbsp;✦&nbsp; Powered by Anthropic AI with Web Search</span>
+  <span id="lastUpdated">Last updated: —</span>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════ JAVASCRIPT ════════════════════ -->
+<script>
+/* ─────────────────────────────────────────────────────────
+   STATE
+───────────────────────────────────────────────────────── */
+let DATA       = null;
+let curTab     = 'punjab';
+let curView    = 'list';
+let calYear    = 2026;
+let calMonth   = new Date().getMonth();
+let cdInterval = null;
+
+/* ─────────────────────────────────────────────────────────
+   FALLBACK DATA  (shown when API is unavailable)
+───────────────────────────────────────────────────────── */
+const FALLBACK = {
+  punjab: [
+    /* ── 2026 ── */
+    { date:"2026-02-05", name:"Kashmir Solidarity Day",       type:"provincial", description:"Half-day observance across Pakistan to express solidarity with the people of Kashmir." },
+    { date:"2026-03-20", name:"Eid ul-Fitr (Day 1)",         type:"islamic",    description:"Marks the end of Ramadan 1447 AH; exact date subject to official moon sighting." },
+    { date:"2026-03-21", name:"Eid ul-Fitr (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Fitr celebrations." },
+    { date:"2026-03-22", name:"Eid ul-Fitr (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Fitr celebrations." },
+    { date:"2026-03-23", name:"Pakistan Day",                 type:"federal",    description:"Commemorates the 1940 Lahore Resolution and the 1956 Constitution proclamation." },
+    { date:"2026-05-01", name:"Labour Day",                   type:"federal",    description:"International Workers' Day, a national public holiday." },
+    { date:"2026-05-22", name:"Summer School Vacations",      type:"school",     description:"Punjab schools officially begin summer break from 22 May 2026, as announced by the Punjab School Education Department due to extreme heat conditions." },
+    { date:"2026-05-27", name:"Eid ul-Adha (Day 1)",         type:"islamic",    description:"Festival of Sacrifice, 10 Dhul-Hijja 1447 AH; date subject to moon sighting." },
+    { date:"2026-05-28", name:"Eid ul-Adha (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Adha celebrations." },
+    { date:"2026-05-29", name:"Eid ul-Adha (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Adha celebrations." },
+    { date:"2026-06-25", name:"Ashura (10 Muharram 1448)",   type:"islamic",    description:"Sacred day of fasting and remembrance marking the martyrdom of Imam Husain at Karbala." },
+    { date:"2026-08-14", name:"Independence Day",             type:"federal",    description:"Pakistan's 79th Independence Day — celebrates freedom from British colonial rule in 1947." },
+    { date:"2026-08-24", name:"Schools Reopen (Post-Summer)",type:"school",     description:"Punjab schools reopen on 24 August 2026 after the official summer break ending 23 August." },
+    { date:"2026-09-15", name:"Eid Milad-un-Nabi",            type:"islamic",    description:"Celebrates the birth anniversary of the Prophet Muhammad ﷺ (12 Rabi ul-Awwal 1448 AH); subject to moon sighting." },
+    { date:"2026-11-09", name:"Iqbal Day",                    type:"federal",    description:"Birth anniversary of Allama Muhammad Iqbal, national poet and philosopher of Pakistan." },
+    { date:"2026-12-20", name:"Winter School Vacations",      type:"school",     description:"Punjab schools close for winter holidays." },
+    { date:"2026-12-25", name:"Quaid-e-Azam Day / Christmas", type:"federal",    description:"Birth anniversary of Quaid-e-Azam Muhammad Ali Jinnah; also celebrated as Christmas Day." },
+    /* ── 2027 ── */
+    { date:"2027-01-06", name:"Schools Reopen (Post-Winter)",type:"school",     description:"Punjab schools reopen after the winter break." },
+    { date:"2027-02-05", name:"Kashmir Solidarity Day",       type:"provincial", description:"Annual half-day observance showing solidarity with Kashmiris." },
+    { date:"2027-03-09", name:"Eid ul-Fitr (Day 1)",         type:"islamic",    description:"End of Ramadan 1448 AH; exact date subject to official moon sighting." },
+    { date:"2027-03-10", name:"Eid ul-Fitr (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Fitr." },
+    { date:"2027-03-11", name:"Eid ul-Fitr (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Fitr." },
+    { date:"2027-03-23", name:"Pakistan Day",                 type:"federal",    description:"National holiday commemorating the Lahore Resolution of 23 March 1940." },
+    { date:"2027-05-01", name:"Labour Day",                   type:"federal",    description:"International Workers' Day." },
+    { date:"2027-05-16", name:"Eid ul-Adha (Day 1)",         type:"islamic",    description:"Festival of Sacrifice, 10 Dhul-Hijja 1448 AH; subject to moon sighting." },
+    { date:"2027-05-17", name:"Eid ul-Adha (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Adha." },
+    { date:"2027-05-18", name:"Eid ul-Adha (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Adha." },
+    { date:"2027-06-14", name:"Ashura (10 Muharram 1449)",   type:"islamic",    description:"Day of fasting and remembrance for the martyrdom of Imam Husain." },
+    { date:"2027-08-14", name:"Independence Day",             type:"federal",    description:"Pakistan's 80th Independence Day." },
+    { date:"2027-09-04", name:"Eid Milad-un-Nabi",            type:"islamic",    description:"Birth anniversary of the Prophet Muhammad ﷺ (12 Rabi ul-Awwal 1449 AH); subject to moon sighting." },
+    { date:"2027-11-09", name:"Iqbal Day",                    type:"federal",    description:"Birth anniversary of Allama Iqbal." },
+    { date:"2027-12-25", name:"Quaid-e-Azam Day / Christmas", type:"federal",    description:"Birth anniversary of Quaid-e-Azam; also Christmas Day." },
+  ],
+  sindh: [
+    /* ── 2026 ── */
+    { date:"2026-02-05", name:"Kashmir Solidarity Day",       type:"provincial", description:"Half-day observance; schools and government offices close after midday." },
+    { date:"2026-03-20", name:"Eid ul-Fitr (Day 1)",         type:"islamic",    description:"End of Ramadan 1447 AH celebrations." },
+    { date:"2026-03-21", name:"Eid ul-Fitr (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Fitr." },
+    { date:"2026-03-22", name:"Eid ul-Fitr (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Fitr." },
+    { date:"2026-03-23", name:"Pakistan Day",                 type:"federal",    description:"Commemorates the Lahore Resolution of 1940." },
+    { date:"2026-05-01", name:"Labour Day",                   type:"federal",    description:"International Workers' Day." },
+    { date:"2026-05-27", name:"Eid ul-Adha (Day 1)",         type:"islamic",    description:"Festival of Sacrifice." },
+    { date:"2026-05-28", name:"Eid ul-Adha (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Adha." },
+    { date:"2026-05-29", name:"Eid ul-Adha (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Adha." },
+    { date:"2026-06-25", name:"Ashura (10 Muharram 1448)",   type:"islamic",    description:"Sacred day of fasting and remembrance in Sindh." },
+    { date:"2026-08-14", name:"Independence Day",             type:"federal",    description:"Pakistan's Independence Day." },
+    { date:"2026-09-15", name:"Eid Milad-un-Nabi",            type:"islamic",    description:"Prophet's birthday — 12 Rabi ul-Awwal 1448 AH." },
+    { date:"2026-12-04", name:"Sindhi Culture Day",           type:"provincial", description:"Ajrak and Sindhi Topi Day — celebrates Sindhi heritage, dress, and culture (first Sunday of December)." },
+    { date:"2026-12-25", name:"Quaid-e-Azam Day / Christmas", type:"federal",    description:"Birth anniversary of Quaid-e-Azam; also Christmas Day." },
+    /* ── 2027 ── */
+    { date:"2027-02-05", name:"Kashmir Solidarity Day",       type:"provincial", description:"Annual half-day observance across Sindh." },
+    { date:"2027-03-09", name:"Eid ul-Fitr (Day 1)",         type:"islamic",    description:"End of Ramadan 1448 AH." },
+    { date:"2027-03-10", name:"Eid ul-Fitr (Day 2)",         type:"islamic",    description:"Second day of Eid." },
+    { date:"2027-03-11", name:"Eid ul-Fitr (Day 3)",         type:"islamic",    description:"Third day of Eid." },
+    { date:"2027-03-23", name:"Pakistan Day",                 type:"federal",    description:"National holiday." },
+    { date:"2027-05-01", name:"Labour Day",                   type:"federal",    description:"International Workers' Day." },
+    { date:"2027-05-16", name:"Eid ul-Adha (Day 1)",         type:"islamic",    description:"Festival of Sacrifice, 1449 AH." },
+    { date:"2027-05-17", name:"Eid ul-Adha (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Adha." },
+    { date:"2027-05-18", name:"Eid ul-Adha (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Adha." },
+    { date:"2027-08-14", name:"Independence Day",             type:"federal",    description:"Pakistan's Independence Day." },
+    { date:"2027-12-25", name:"Quaid-e-Azam Day / Christmas", type:"federal",    description:"National and religious holiday." },
+  ],
+  kpk: [
+    /* ── 2026 ── */
+    { date:"2026-02-05", name:"Kashmir Solidarity Day",       type:"provincial", description:"Half-day public holiday to show solidarity with Kashmiris." },
+    { date:"2026-03-20", name:"Eid ul-Fitr (Day 1)",         type:"islamic",    description:"End of Ramadan 1447 AH." },
+    { date:"2026-03-21", name:"Eid ul-Fitr (Day 2)",         type:"islamic",    description:"Second day of Eid." },
+    { date:"2026-03-22", name:"Eid ul-Fitr (Day 3)",         type:"islamic",    description:"Third day of Eid." },
+    { date:"2026-03-23", name:"Pakistan Day",                 type:"federal",    description:"Commemorates the Lahore Resolution." },
+    { date:"2026-05-01", name:"Labour Day",                   type:"federal",    description:"International Workers' Day." },
+    { date:"2026-05-27", name:"Eid ul-Adha (Day 1)",         type:"islamic",    description:"Festival of Sacrifice, 10 Dhul-Hijja 1447 AH." },
+    { date:"2026-05-28", name:"Eid ul-Adha (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Adha." },
+    { date:"2026-05-29", name:"Eid ul-Adha (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Adha." },
+    { date:"2026-06-25", name:"Ashura (10 Muharram 1448)",   type:"islamic",    description:"Day of fasting and remembrance observed widely in KPK." },
+    { date:"2026-08-14", name:"Independence Day",             type:"federal",    description:"Pakistan's Independence Day." },
+    { date:"2026-09-15", name:"Eid Milad-un-Nabi",            type:"islamic",    description:"Prophet's birthday — 12 Rabi ul-Awwal 1448 AH." },
+    { date:"2026-11-09", name:"Iqbal Day",                    type:"federal",    description:"Birth anniversary of Allama Iqbal." },
+    { date:"2026-12-25", name:"Quaid-e-Azam Day / Christmas", type:"federal",    description:"Birth anniversary of Quaid-e-Azam; also Christmas Day." },
+    /* ── 2027 ── */
+    { date:"2027-02-05", name:"Kashmir Solidarity Day",       type:"provincial", description:"Annual half-day observance." },
+    { date:"2027-03-09", name:"Eid ul-Fitr (Day 1)",         type:"islamic",    description:"End of Ramadan 1448 AH." },
+    { date:"2027-03-10", name:"Eid ul-Fitr (Day 2)",         type:"islamic",    description:"Second day of Eid." },
+    { date:"2027-03-11", name:"Eid ul-Fitr (Day 3)",         type:"islamic",    description:"Third day of Eid." },
+    { date:"2027-03-23", name:"Pakistan Day",                 type:"federal",    description:"National holiday." },
+    { date:"2027-05-01", name:"Labour Day",                   type:"federal",    description:"International Workers' Day." },
+    { date:"2027-05-16", name:"Eid ul-Adha (Day 1)",         type:"islamic",    description:"Festival of Sacrifice, 1449 AH." },
+    { date:"2027-05-17", name:"Eid ul-Adha (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Adha." },
+    { date:"2027-05-18", name:"Eid ul-Adha (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Adha." },
+    { date:"2027-06-14", name:"Ashura (10 Muharram 1449)",   type:"islamic",    description:"Day of fasting and remembrance." },
+    { date:"2027-08-14", name:"Independence Day",             type:"federal",    description:"Pakistan's Independence Day." },
+    { date:"2027-09-04", name:"Eid Milad-un-Nabi",            type:"islamic",    description:"Prophet's birthday — 12 Rabi ul-Awwal 1449 AH." },
+    { date:"2027-11-09", name:"Iqbal Day",                    type:"federal",    description:"Birth anniversary of Allama Iqbal." },
+    { date:"2027-12-25", name:"Quaid-e-Azam Day / Christmas", type:"federal",    description:"Birth anniversary of Quaid-e-Azam; also Christmas Day." },
+  ],
+  balochistan: [
+    /* ── 2026 ── */
+    { date:"2026-02-05", name:"Kashmir Solidarity Day",       type:"provincial", description:"Half-day observance across Pakistan." },
+    { date:"2026-03-20", name:"Eid ul-Fitr (Day 1)",         type:"islamic",    description:"End of Ramadan 1447 AH celebrations." },
+    { date:"2026-03-21", name:"Eid ul-Fitr (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Fitr." },
+    { date:"2026-03-22", name:"Eid ul-Fitr (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Fitr." },
+    { date:"2026-03-23", name:"Pakistan Day",                 type:"federal",    description:"National holiday — Lahore Resolution anniversary." },
+    { date:"2026-03-27", name:"Balochistan Day",              type:"provincial", description:"Celebrates Balochistan's accession to Pakistan on 27 March 1948; observed as a provincial public holiday." },
+    { date:"2026-05-01", name:"Labour Day",                   type:"federal",    description:"International Workers' Day." },
+    { date:"2026-05-27", name:"Eid ul-Adha (Day 1)",         type:"islamic",    description:"Festival of Sacrifice, 10 Dhul-Hijja 1447 AH." },
+    { date:"2026-05-28", name:"Eid ul-Adha (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Adha." },
+    { date:"2026-05-29", name:"Eid ul-Adha (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Adha." },
+    { date:"2026-06-25", name:"Ashura (10 Muharram 1448)",   type:"islamic",    description:"Sacred day of fasting and remembrance observed across Balochistan." },
+    { date:"2026-08-14", name:"Independence Day",             type:"federal",    description:"Pakistan's Independence Day." },
+    { date:"2026-09-15", name:"Eid Milad-un-Nabi",            type:"islamic",    description:"Prophet's birthday — 12 Rabi ul-Awwal 1448 AH." },
+    { date:"2026-11-09", name:"Iqbal Day",                    type:"federal",    description:"Birth anniversary of Allama Iqbal." },
+    { date:"2026-12-25", name:"Quaid-e-Azam Day / Christmas", type:"federal",    description:"Birth anniversary of Quaid-e-Azam; also Christmas Day." },
+    /* ── 2027 ── */
+    { date:"2027-02-05", name:"Kashmir Solidarity Day",       type:"provincial", description:"Annual half-day observance." },
+    { date:"2027-03-09", name:"Eid ul-Fitr (Day 1)",         type:"islamic",    description:"End of Ramadan 1448 AH." },
+    { date:"2027-03-10", name:"Eid ul-Fitr (Day 2)",         type:"islamic",    description:"Second day of Eid." },
+    { date:"2027-03-11", name:"Eid ul-Fitr (Day 3)",         type:"islamic",    description:"Third day of Eid." },
+    { date:"2027-03-23", name:"Pakistan Day",                 type:"federal",    description:"National holiday." },
+    { date:"2027-03-27", name:"Balochistan Day",              type:"provincial", description:"Annual provincial holiday celebrating Balochistan's accession to Pakistan." },
+    { date:"2027-05-01", name:"Labour Day",                   type:"federal",    description:"International Workers' Day." },
+    { date:"2027-05-16", name:"Eid ul-Adha (Day 1)",         type:"islamic",    description:"Festival of Sacrifice, 10 Dhul-Hijja 1448 AH." },
+    { date:"2027-05-17", name:"Eid ul-Adha (Day 2)",         type:"islamic",    description:"Second day of Eid ul-Adha." },
+    { date:"2027-05-18", name:"Eid ul-Adha (Day 3)",         type:"islamic",    description:"Third day of Eid ul-Adha." },
+    { date:"2027-06-14", name:"Ashura (10 Muharram 1449)",   type:"islamic",    description:"Day of fasting and remembrance." },
+    { date:"2027-08-14", name:"Independence Day",             type:"federal",    description:"Pakistan's Independence Day." },
+    { date:"2027-09-04", name:"Eid Milad-un-Nabi",            type:"islamic",    description:"Prophet's birthday — 12 Rabi ul-Awwal 1449 AH." },
+    { date:"2027-11-09", name:"Iqbal Day",                    type:"federal",    description:"Birth anniversary of Allama Iqbal." },
+    { date:"2027-12-25", name:"Quaid-e-Azam Day / Christmas", type:"federal",    description:"Birth anniversary of Quaid-e-Azam; also Christmas Day." },
+  ]
+};
+
+/* ─────────────────────────────────────────────────────────
+   API FETCH  (Anthropic with web_search tool)
+───────────────────────────────────────────────────────── */
+async function fetchFromAI() {
+  const apiKey = document.getElementById('apiKeyIn').value.trim();
+  const headers = {
+    'Content-Type':   'application/json',
+    'anthropic-version': '2023-06-01',
+    'anthropic-dangerous-direct-browser-access': 'true'
+  };
+  if (apiKey) headers['x-api-key'] = apiKey;
+
+  const prompt = `You are a Pakistan public holiday expert. Use web search to find the most accurate, up-to-date 2026 and 2027 public holiday data for Pakistan.
+
+Please search for:
+1. Pakistan federal/national public holidays 2026-2027
+2. Punjab province public holidays and school vacations 2026-2027
+3. Sindh province public holidays 2026-2027
+4. KPK (Khyber Pakhtunkhwa) public holidays 2026-2027
+5. Balochistan province public holidays 2026-2027
+6. Islamic calendar holidays for Pakistan 2026-2027 (Eid ul-Fitr, Eid ul-Adha, Ashura, Eid Milad-un-Nabi) — include the AH year and note lunar calendar dates are approximate
+
+After searching, respond with ONLY a valid JSON object — no markdown, no explanation, no extra text. Use exactly this structure:
+
+{
+  "punjab": [
+    {"date":"YYYY-MM-DD","name":"Holiday Name","type":"federal|islamic|provincial|school","description":"1-2 sentence description"}
+  ],
+  "sindh": [...],
+  "kpk": [...],
+  "balochistan": [...]
+}
+
+Rules:
+- Include 15+ holidays per province covering both 2026 and 2027
+- Sort each array by date ascending
+- type must be exactly one of: federal, islamic, provincial, school
+- Use best-known/most-likely dates for lunar holidays (note they are subject to moon sighting)
+- Return ONLY the JSON object`;
+
+  const messages = [{ role: 'user', content: prompt }];
+
+  for (let i = 0; i < 10; i++) {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 8000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        document.getElementById('apikeyBox').style.display = 'flex';
+        showToast('⚠️ Authentication required — please enter your API key above.');
+      }
+      throw new Error(err.error?.message || `HTTP ${res.status}`);
+    }
+
+    const body = await res.json();
+
+    if (body.stop_reason === 'end_turn') {
+      const txt = (body.content || []).find(c => c.type === 'text');
+      if (txt) {
+        const parsed = tryParseJSON(txt.text);
+        if (parsed) return parsed;
+      }
+      throw new Error('No valid JSON in model response');
+    }
+
+    if (body.stop_reason === 'tool_use') {
+      /* Continue the agentic loop */
+      messages.push({ role: 'assistant', content: body.content });
+      const results = (body.content || [])
+        .filter(c => c.type === 'tool_use')
+        .map(c => ({
+          type: 'tool_result',
+          tool_use_id: c.id,
+          content: c.output
+            ? (typeof c.output === 'string' ? c.output : JSON.stringify(c.output))
+            : 'Search executed by server.'
+        }));
+      if (results.length) messages.push({ role: 'user', content: results });
+      continue;
+    }
+
+    /* Fallback: try to pull text anyway */
+    const txt = (body.content || []).find(c => c.type === 'text');
+    if (txt) {
+      const parsed = tryParseJSON(txt.text);
+      if (parsed) return parsed;
+    }
+    break;
+  }
+  throw new Error('Could not extract holiday data from AI response');
+}
+
+function tryParseJSON(text) {
+  try { return JSON.parse(text.trim()); } catch {}
+  const m = text.match(/\{[\s\S]*"punjab"[\s\S]*\}/);
+  if (!m) return null;
+  try { return JSON.parse(m[0]); } catch {}
+  try { return JSON.parse(m[0].replace(/,\s*([}\]])/g,'$1')); } catch {}
+  return null;
+}
+
+/* ─────────────────────────────────────────────────────────
+   INIT / REFRESH
+───────────────────────────────────────────────────────── */
+async function init() {
+  showSkeleton();
+  try {
+    DATA = await fetchFromAI();
+    renderAll();
+    setLastUpdated('Live — Anthropic AI + web search');
+    showToast('✅ Holiday data loaded successfully!');
+  } catch (e) {
+    console.warn('AI fetch failed, using fallback data:', e);
+    DATA = FALLBACK;
+    renderAll();
+    setLastUpdated('Cached data (live fetch unavailable)');
+    showToast('ℹ️ Showing cached data. Enter API key above for live updates.');
+    document.getElementById('apikeyBox').style.display = 'flex';
+  }
+}
+
+async function refreshData() {
+  const icon = document.getElementById('rfIcon');
+  icon.style.animation = 'spin 1s linear infinite';
+  try {
+    const fresh = await fetchFromAI();
+    DATA = fresh;
+    renderAll();
+    setLastUpdated('Live — just refreshed');
+    showToast('✅ Data refreshed!');
+  } catch (e) {
+    showToast('⚠️ Refresh failed — check API key and try again.');
+  } finally {
+    icon.style.animation = '';
+  }
+}
+
+function setLastUpdated(info) {
+  document.getElementById('lastUpdated').textContent =
+    'Last updated: ' + new Date().toLocaleString() + ' — ' + info;
+}
+
+/* ─────────────────────────────────────────────────────────
+   RENDER
+───────────────────────────────────────────────────────── */
+const PROVINCE_META = {
+  punjab:      { name:'Punjab',              emoji:'🏛️', accent:'#1a5c38' },
+  sindh:       { name:'Sindh',               emoji:'🌊', accent:'#0d5899' },
+  kpk:         { name:'Khyber Pakhtunkhwa',  emoji:'🏔️', accent:'#6d3a2b' },
+  balochistan: { name:'Balochistan',         emoji:'🌿', accent:'#4a6b2a' }
+};
+
+const CAT_META = [
+  { key:'federal',    icon:'🏛️', label:'Federal / National Government Holidays' },
+  { key:'islamic',    icon:'🌙', label:'Islamic / Religious Holidays' },
+  { key:'provincial', icon:'🎉', label:'Provincial / Local Holidays' },
+  { key:'school',     icon:'🏖️', label:'School / Education Vacations' }
+];
+
+const TYPE_LABELS = {
+  federal:'🏛️ Federal', islamic:'🌙 Islamic',
+  provincial:'🎉 Provincial', school:'🏖️ School'
+};
+
+function renderAll() {
+  hideSkeleton();
+  ['punjab','sindh','kpk','balochistan'].forEach(p => renderProvince(p));
+  startCountdown();
+  if (curView === 'cal') renderCalendar();
+}
+
+function renderProvince(prov) {
+  const hols  = (DATA[prov] || []).slice().sort((a,b) => a.date.localeCompare(b.date));
+  const meta  = PROVINCE_META[prov];
+  const now   = new Date();
+
+  /* Find "next" holiday */
+  const nextHol = hols.find(h => new Date(h.date + 'T00:00:00') >= now);
+
+  const counts = CAT_META.reduce((acc,c) => {
+    acc[c.key] = hols.filter(h=>h.type===c.key).length; return acc;
+  }, {});
+
+  let html = `
+    <div class="prov-hdr" style="border-left-color:${meta.accent}">
+      <div>
+        <div class="prov-hdr-name">${meta.emoji} ${meta.name}</div>
+        <div class="prov-hdr-sub">${hols.length} total entries for 2026 – 2027</div>
+      </div>
+      <div class="prov-stats">
+        <div class="stat"><span class="stat-n">${counts.federal||0}</span><span class="stat-l">Federal</span></div>
+        <div class="stat"><span class="stat-n">${counts.islamic||0}</span><span class="stat-l">Islamic</span></div>
+        <div class="stat"><span class="stat-n">${counts.provincial||0}</span><span class="stat-l">Provincial</span></div>
+        <div class="stat"><span class="stat-n">${counts.school||0}</span><span class="stat-l">School</span></div>
+      </div>
+    </div>`;
+
+  CAT_META.forEach(cat => {
+    const catHols = hols.filter(h => h.type === cat.key);
+    if (!catHols.length) return;
+
+    html += `
+      <div class="cat-section" data-cat="${cat.key}">
+        <div class="cat-hdr">
+          <span class="cat-icon">${cat.icon}</span>
+          <span class="cat-title">${cat.label}</span>
+          <span class="cat-count">${catHols.length}</span>
+        </div>
+        <div class="cards-grid">`;
+
+    catHols.forEach(h => {
+      const d         = new Date(h.date + 'T00:00:00');
+      const dateStr   = d.toLocaleDateString('en-US', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
+      const isNext    = nextHol && h.date === nextHol.date && h.name === nextHol.name;
+      const typeClass = h.type || 'federal';
+
+      html += `
+        <div class="hcard ${typeClass}${isNext?' next-up':''}"
+             data-date="${h.date}" data-name="${esc(h.name.toLowerCase())}"
+             data-desc="${esc((h.description||'').toLowerCase())}">
+          <div class="card-date">${dateStr}</div>
+          <div class="card-name">${esc(h.name)}</div>
+          <span class="card-badge badge-${typeClass}">${TYPE_LABELS[typeClass]||typeClass}</span>
+          <div class="card-desc">${esc(h.description||'')}</div>
+        </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  document.getElementById(`tab-${prov}`).innerHTML = html;
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ─────────────────────────────────────────────────────────
+   TABS / VIEW
+───────────────────────────────────────────────────────── */
+function switchTab(prov) {
+  curTab = prov;
+  document.querySelectorAll('.ptab').forEach((btn, i) => {
+    btn.classList.toggle('active', ['punjab','sindh','kpk','balochistan'][i] === prov);
+  });
+  document.querySelectorAll('.tcontent').forEach(el => el.classList.remove('active'));
+  document.getElementById(`tab-${prov}`).classList.add('active');
+  if (curView === 'cal') renderCalendar();
+}
+
+function setView(v) {
+  curView = v;
+  document.getElementById('btnList').classList.toggle('active', v === 'list');
+  document.getElementById('btnCal').classList.toggle('active',  v === 'cal');
+  document.getElementById('listView').style.display = v === 'list' ? 'block' : 'none';
+  const calEl = document.getElementById('calView');
+  calEl.classList.toggle('active', v === 'cal');
+  if (v === 'cal' && DATA) renderCalendar();
+}
+
+/* ─────────────────────────────────────────────────────────
+   CALENDAR
+───────────────────────────────────────────────────────── */
+const MONTH_NAMES = ['January','February','March','April','May','June',
+                     'July','August','September','October','November','December'];
+
+function renderCalendar() {
+  if (!DATA) return;
+  document.getElementById('calTitle').textContent =
+    `${MONTH_NAMES[calMonth]} ${calYear} — ${PROVINCE_META[curTab].name}`;
+
+  const body  = document.getElementById('calBody');
+  body.innerHTML = '';
+
+  const today    = new Date();
+  const hols     = (DATA[curTab] || []);
+  const holMap   = {};
+  hols.forEach(h => {
+    const d = new Date(h.date + 'T00:00:00');
+    if (d.getFullYear() === calYear && d.getMonth() === calMonth) {
+      const day = d.getDate();
+      if (!holMap[day]) holMap[day] = [];
+      holMap[day].push(h);
+    }
+  });
+
+  const firstDow  = new Date(calYear, calMonth, 1).getDay();
+  const daysInMo  = new Date(calYear, calMonth+1, 0).getDate();
+  const daysInPrv = new Date(calYear, calMonth, 0).getDate();
+
+  /* Previous month overflow */
+  for (let i = firstDow - 1; i >= 0; i--) {
+    body.innerHTML += `<div class="cal-cell other"><div class="cal-dn">${daysInPrv - i}</div></div>`;
+  }
+
+  /* Current month */
+  for (let d = 1; d <= daysInMo; d++) {
+    const isToday = (today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===d);
+    let cell = `<div class="cal-cell${isToday?' today':''}"><div class="cal-dn">${d}</div>`;
+    (holMap[d] || []).forEach(h => {
+      cell += `<span class="cal-dot dot-${h.type}" title="${h.name}">${h.name}</span>`;
+    });
+    cell += `</div>`;
+    body.innerHTML += cell;
+  }
+
+  /* Next month overflow */
+  const totalCells = Math.ceil((firstDow + daysInMo) / 7) * 7;
+  for (let i = 1; i <= totalCells - firstDow - daysInMo; i++) {
+    body.innerHTML += `<div class="cal-cell other"><div class="cal-dn">${i}</div></div>`;
+  }
+}
+
+function shiftMonth(delta) {
+  calMonth += delta;
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0;  calYear++; }
+  renderCalendar();
+}
+
+/* ─────────────────────────────────────────────────────────
+   COUNTDOWN  (next Punjab holiday)
+───────────────────────────────────────────────────────── */
+function startCountdown() {
+  if (cdInterval) clearInterval(cdInterval);
+  if (!DATA) return;
+
+  const now   = new Date();
+  const next  = (DATA.punjab || [])
+    .slice().sort((a,b) => a.date.localeCompare(b.date))
+    .find(h => new Date(h.date + 'T00:00:00') >= now);
+
+  if (!next) { document.getElementById('cdName').textContent = 'No upcoming holidays'; return; }
+  document.getElementById('cdName').textContent = next.name;
+
+  const target = new Date(next.date + 'T00:00:00');
+  const tick = () => {
+    const diff = target - new Date();
+    if (diff <= 0) {
+      ['cdD','cdH','cdM','cdS'].forEach(id => document.getElementById(id).textContent = '0');
+      clearInterval(cdInterval);
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cdD').textContent = d;
+    document.getElementById('cdH').textContent = String(h).padStart(2,'0');
+    document.getElementById('cdM').textContent = String(m).padStart(2,'0');
+    document.getElementById('cdS').textContent = String(s).padStart(2,'0');
+  };
+  tick();
+  cdInterval = setInterval(tick, 1000);
+}
+
+/* ─────────────────────────────────────────────────────────
+   FILTER
+───────────────────────────────────────────────────────── */
+function filterCards() {
+  const q     = document.getElementById('searchIn').value.toLowerCase().trim();
+  const month = document.getElementById('monthSel').value;
+
+  document.querySelectorAll('.hcard').forEach(card => {
+    const name    = card.dataset.name || '';
+    const desc    = card.dataset.desc || '';
+    const date    = card.dataset.date || '';
+    const cardMo  = date.slice(5, 7);
+
+    const okQ  = !q     || name.includes(q) || desc.includes(q);
+    const okM  = !month || cardMo === month;
+
+    card.style.display = (okQ && okM) ? '' : 'none';
+  });
+}
+
+/* ─────────────────────────────────────────────────────────
+   SKELETON
+───────────────────────────────────────────────────────── */
+function showSkeleton() {
+  document.getElementById('skeletonLoader').style.display = 'block';
+  document.getElementById('tabsWrap').style.display       = 'none';
+}
+function hideSkeleton() {
+  document.getElementById('skeletonLoader').style.display = 'none';
+  document.getElementById('tabsWrap').style.display       = 'block';
+}
+
+/* ─────────────────────────────────────────────────────────
+   PDF DOWNLOAD  (jsPDF)
+───────────────────────────────────────────────────────── */
+async function downloadPDF() {
+  if (!DATA) { showToast('⚠️ No data loaded yet.'); return; }
+  showToast('📝 Generating PDF — please wait…');
+
+  await new Promise(r => setTimeout(r, 200)); // let toast render
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+
+    const GREEN  = [26, 92, 56];
+    const GOLD   = [200, 168, 75];
+    const WHITE  = [255, 255, 255];
+    const LGREY  = [248, 248, 248];
+    const DGREY  = [60, 60, 60];
+
+    const TYPE_COL = {
+      federal:    [200,168,75],
+      islamic:    [26,92,56],
+      provincial: [124,77,189],
+      school:     [25,118,210]
+    };
+    const TYPE_LBL = {
+      federal:'Federal', islamic:'Islamic', provincial:'Provincial', school:'School'
+    };
+
+    const provOrder = ['punjab','sindh','kpk','balochistan'];
+    let firstPage = true;
+
+    provOrder.forEach(prov => {
+      if (!firstPage) doc.addPage();
+      firstPage = false;
+
+      const hols = (DATA[prov] || []).slice().sort((a,b) => a.date.localeCompare(b.date));
+      const meta = PROVINCE_META[prov];
+
+      /* ── Page header ── */
+      doc.setFillColor(...GREEN);
+      doc.rect(0, 0, 210, 38, 'F');
+
+      doc.setFillColor(...GOLD);
+      doc.rect(0, 38, 210, 2.5, 'F');
+
+      doc.setTextColor(...WHITE);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(19);
+      doc.text('Pakistan Holidays Hub', 105, 15, { align:'center' });
+
+      doc.setFontSize(12);
+      doc.setFont('helvetica','normal');
+      doc.text(`${meta.name} Province — 2026 – 2027`, 105, 25, { align:'center' });
+
+      doc.setFontSize(8);
+      doc.text(`Generated: ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}`, 105, 32, { align:'center' });
+
+      let y = 48;
+
+      CAT_META.forEach(cat => {
+        const catHols = hols.filter(h => h.type === cat.key);
+        if (!catHols.length) return;
+
+        /* Page break check */
+        if (y > 255) { doc.addPage(); y = 18; }
+
+        /* Category header */
+        doc.setFillColor(236, 245, 240);
+        doc.roundedRect(10, y-4, 190, 11, 2, 2, 'F');
+        doc.setFillColor(...TYPE_COL[cat.key]);
+        doc.rect(10, y-4, 3.5, 11, 'F');
+
+        doc.setTextColor(...GREEN);
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(10.5);
+        doc.text(`${cat.icon} ${cat.label}`, 17, y+3);
+        doc.text(`${catHols.length}`, 196, y+3, { align:'right' });
+
+        y += 14;
+
+        catHols.forEach(h => {
+          if (y > 270) { doc.addPage(); y = 18; }
+
+          const d   = new Date(h.date + 'T00:00:00');
+          const ds  = d.toLocaleDateString('en-US',{ weekday:'short', day:'numeric', month:'short', year:'numeric' });
+
+          /* Card bg */
+          doc.setFillColor(...LGREY);
+          doc.roundedRect(10, y-2, 190, 19, 2, 2, 'F');
+          doc.setFillColor(...TYPE_COL[h.type || 'federal']);
+          doc.rect(10, y-2, 3.5, 19, 'F');
+
+          /* Date */
+          doc.setTextColor(140,140,140);
+          doc.setFont('helvetica','normal');
+          doc.setFontSize(7.5);
+          doc.text(ds, 17, y+3.5);
+
+          /* Name */
+          doc.setTextColor(...DGREY);
+          doc.setFont('helvetica','bold');
+          doc.setFontSize(9.5);
+          doc.text(h.name, 17, y+9.5);
+
+          /* Badge */
+          const tc  = TYPE_COL[h.type || 'federal'];
+          const lbl = TYPE_LBL[h.type || 'federal'];
+          doc.setFillColor(...tc);
+          const bw = doc.getTextWidth(lbl) + 5;
+          doc.roundedRect(17, y+11.5, bw, 5, 1, 1, 'F');
+          doc.setTextColor(...WHITE);
+          doc.setFont('helvetica','bold');
+          doc.setFontSize(6.5);
+          doc.text(lbl, 19.5, y+15);
+
+          /* Description */
+          if (h.description) {
+            doc.setTextColor(100,100,100);
+            doc.setFont('helvetica','normal');
+            doc.setFontSize(7.5);
+            const shortDesc = h.description.length > 88
+              ? h.description.slice(0,88) + '…'
+              : h.description;
+            doc.text(shortDesc, 17 + bw + 3, y+15, { maxWidth: 155 });
+          }
+
+          y += 23;
+        });
+
+        y += 4;
+      });
+
+      /* Page footer */
+      doc.setFillColor(...GREEN);
+      doc.rect(0, 285, 210, 12, 'F');
+      doc.setTextColor(...GOLD);
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(7.5);
+      doc.text('Pakistan Holidays Hub  ✦  Powered by Anthropic AI with Web Search', 105, 293, { align:'center' });
+    });
+
+    doc.save('Pakistan_Holidays_Hub_2026-2027.pdf');
+    showToast('✅ PDF downloaded successfully!');
+  } catch (err) {
+    console.error('PDF error:', err);
+    showToast('❌ PDF generation failed — ' + err.message);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   TOAST
+───────────────────────────────────────────────────────── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3800);
+}
+
+/* ─────────────────────────────────────────────────────────
+   SPIN ANIMATION (refresh button)
+───────────────────────────────────────────────────────── */
+const spinStyle = document.createElement('style');
+spinStyle.textContent = '@keyframes spin{from{display:inline-block;transform:rotate(0deg)}to{transform:rotate(360deg)}}';
+document.head.appendChild(spinStyle);
+
+/* ─────────────────────────────────────────────────────────
+   BOOTSTRAP
+───────────────────────────────────────────────────────── */
+init();
+
+/* ── PWA Service Worker ── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Faisalabad School Hub</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json"/>
+  <meta name="theme-color" content="#1a5c38"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="School Hub"/>
+  <link rel="apple-touch-icon" href="./icons/icon-192.png"/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --g:   #1a5c38;
+      --gd:  #0f3d25;
+      --g2:  #2a7a4e;
+      --gold:#c8a84b;
+      --gl:  #e0c06a;
+      --cream:#faf7f0;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--cream);
+      overflow-x: hidden;
+    }
+
+    /* ── Islamic tile background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(45deg, rgba(200,168,75,.04) 0, rgba(200,168,75,.04) 1px, transparent 0, transparent 50%),
+        repeating-linear-gradient(-45deg, rgba(200,168,75,.04) 0, rgba(200,168,75,.04) 1px, transparent 0, transparent 50%);
+      background-size: 30px 30px;
+      pointer-events: none;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(150deg, var(--gd) 0%, var(--g) 55%, var(--g2) 100%);
+      padding: env(safe-area-inset-top, 0) 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(200,168,75,.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(255,255,255,.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 2rem;
+      text-align: center;
+    }
+
+    /* Crescent moon animation */
+    .crescent {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: .6rem;
+      animation: floatMoon 4s ease-in-out infinite;
+    }
+    @keyframes floatMoon {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50%       { transform: translateY(-8px) rotate(5deg); }
+    }
+
+    .site-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      color: #fff;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: .35rem;
+    }
+    .site-sub {
+      color: var(--gl);
+      font-size: .88rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: .7rem;
+    }
+    .urdu-line {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,.75);
+      direction: rtl;
+      font-family: 'Noto Nastaliq Urdu', serif;
+      margin-top: .3rem;
+    }
+
+    /* Gold divider */
+    .divider {
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--gl), var(--gold), transparent);
+    }
+
+    /* ── App cards ── */
+    .cards {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 1.8rem 1.2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .app-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 20px rgba(26,92,56,.1);
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      transition: all .22s cubic-bezier(.34,1.3,.64,1);
+      border: 1.5px solid rgba(26,92,56,.08);
+    }
+    .app-card:hover, .app-card:active {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 36px rgba(26,92,56,.18);
+    }
+
+    .card-band {
+      height: 6px;
+    }
+    .band-green { background: linear-gradient(90deg, var(--gd), var(--g), var(--g2)); }
+    .band-gold  { background: linear-gradient(90deg, var(--gold), var(--gl), var(--gold)); }
+
+    .card-body {
+      padding: 1.3rem 1.4rem 1.2rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .card-icon {
+      font-size: 2.4rem;
+      flex-shrink: 0;
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-green { background: linear-gradient(135deg, var(--gd), var(--g)); }
+    .icon-gold  { background: linear-gradient(135deg, #8a6910, var(--gold)); }
+
+    .card-text { flex: 1; min-width: 0; }
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.08rem;
+      color: var(--gd);
+      font-weight: 700;
+      margin-bottom: .22rem;
+      line-height: 1.25;
+    }
+    .card-desc {
+      font-size: .8rem;
+      color: #666;
+      line-height: 1.55;
+      margin-bottom: .6rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .3rem;
+    }
+    .tag {
+      font-size: .67rem;
+      font-weight: 700;
+      padding: .14rem .48rem;
+      border-radius: 20px;
+      letter-spacing: .02em;
+    }
+    .tag-g { background: rgba(26,92,56,.1); color: var(--gd); }
+    .tag-gold { background: rgba(200,168,75,.15); color: #6b500c; }
+    .tag-red  { background: rgba(198,40,40,.1);  color: #b71c1c; }
+
+    .card-arrow {
+      align-self: center;
+      font-size: 1.2rem;
+      color: rgba(26,92,56,.3);
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+    .app-card:hover .card-arrow { color: var(--g); transform: translateX(3px); }
+
+    /* ── Install banner ── */
+    .install-hint {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 1.2rem 1.5rem;
+    }
+    .hint-box {
+      background: linear-gradient(135deg, rgba(26,92,56,.06), rgba(200,168,75,.08));
+      border: 1.5px solid rgba(26,92,56,.14);
+      border-radius: 14px;
+      padding: 1rem 1.15rem;
+    }
+    .hint-title {
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--gd);
+      margin-bottom: .5rem;
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+    }
+    .hint-steps {
+      font-size: .77rem;
+      color: #555;
+      line-height: 1.75;
+      list-style: none;
+    }
+    .hint-steps li::before {
+      content: attr(data-n) '. ';
+      font-weight: 700;
+      color: var(--g);
+    }
+    .hint-note {
+      font-size: .72rem;
+      color: #888;
+      margin-top: .6rem;
+      font-style: italic;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0));
+      font-size: .72rem;
+      color: #aaa;
+    }
+    .footer strong { color: var(--g); }
+
+    /* ── Loading overlay (shown while SW registers) ── */
+    .splash {
+      position: fixed;
+      inset: 0;
+      background: var(--gd);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity .5s;
+    }
+    .splash.hide { opacity: 0; pointer-events: none; }
+    .splash-moon { font-size: 3.5rem; animation: floatMoon 2s ease-in-out infinite; }
+    .splash-text {
+      color: var(--gl);
+      font-size: .85rem;
+      margin-top: 1rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Splash screen -->
+<div class="splash" id="splash">
+  <span class="splash-moon">☪️</span>
+  <div class="splash-text">Faisalabad School Hub</div>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <span class="crescent">☪️</span>
+    <h1 class="site-title">Faisalabad School Hub</h1>
+    <p class="site-sub">Your school · Your news · Your holidays</p>
+    <p class="urdu-line">فیصل آباد اسکول پورٹل</p>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- App cards -->
+<div class="cards">
+
+  <a class="app-card" href="./school-command-centre.html">
+    <div class="card-band band-green"></div>
+    <div class="card-body">
+      <div class="card-icon icon-green">🏫</div>
+      <div class="card-text">
+        <div class="card-title">School Command Centre</div>
+        <div class="card-desc">Live Pakistan education news from Dawn, Geo, ARY, BBC + international sources. Breaking 24h news, official BISE & Punjab SED sources, YouTube channels, and your private school tools.</div>
+        <div class="card-tags">
+          <span class="tag tag-g">📰 Live News</span>
+          <span class="tag tag-red">⚡ 24h Breaking</span>
+          <span class="tag tag-g">🏛️ BISE Faisalabad</span>
+          <span class="tag tag-gold">🔖 Saved News</span>
+        </div>
+      </div>
+      <span class="card-arrow">›</span>
+    </div>
+  </a>
+
+  <a class="app-card" href="./pakistan-holidays-hub.html">
+    <div class="card-band band-gold"></div>
+    <div class="card-body">
+      <div class="card-icon icon-gold">🗓️</div>
+      <div class="card-text">
+        <div class="card-title">Pakistan Holidays Hub</div>
+        <div class="card-desc">2026–2027 school holidays for all 4 provinces — Punjab, Sindh, KPK, Balochistan. Countdown to next holiday, calendar view, PDF download, and AI-powered live data.</div>
+        <div class="card-tags">
+          <span class="tag tag-g">🇵🇰 All Provinces</span>
+          <span class="tag tag-gold">📅 2026–2027</span>
+          <span class="tag tag-g">⏱️ Countdown Timer</span>
+          <span class="tag tag-gold">📄 PDF Export</span>
+        </div>
+      </div>
+      <span class="card-arrow">›</span>
+    </div>
+  </a>
+
+</div>
+
+<!-- Add to Home Screen hint -->
+<div class="install-hint">
+  <div class="hint-box">
+    <div class="hint-title">📱 Add to iPhone Home Screen</div>
+    <ul class="hint-steps">
+      <li data-n="1">Tap the Share button <strong>⎋</strong> at the bottom of Safari</li>
+      <li data-n="2">Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+      <li data-n="3">Tap <strong>Add</strong> — done! Open like any app</li>
+    </ul>
+    <p class="hint-note">Works offline once added. News refreshes automatically when connected.</p>
+  </div>
+</div>
+
+<div class="footer">
+  Built for <strong>Faisalabad School</strong> · Punjab, Pakistan · 2026
+</div>
+
+<script>
+  /* Hide splash after a short moment */
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('splash').classList.add('hide');
+    }, 800);
+  });
+
+  /* Register service worker for offline support */
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js', { scope: './' })
+      .then(reg => console.log('SW registered:', reg.scope))
+      .catch(err => console.log('SW error:', err));
+  }
+</script>
+</body>
+</html>

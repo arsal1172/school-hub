@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School Command Centre — Faisalabad</title>
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json"/>
+  <meta name="theme-color" content="#1a5c38"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="School Hub"/>
+  <link rel="apple-touch-icon" href="./icons/icon-192.png"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --g:#1a5c38; --gd:#0f3d25; --g2:#2a7a4e;
+      --gold:#c8a84b; --goldl:#e0c06a; --goldd:#8a6910;
+      --cream:#faf7f0; --white:#fff;
+      --td:#1a1a1a; --tm:#4a4a4a; --tl:#888;
+      --sh:0 3px 18px rgba(26,92,56,.10);
+      --sh2:0 8px 32px rgba(26,92,56,.18);
+      --rad:10px;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--td);min-height:100vh;}
+
+    /* ── Header ── */
+    .hdr{background:linear-gradient(135deg,var(--gd) 0%,var(--g) 55%,var(--g2) 100%);position:sticky;top:0;z-index:300;box-shadow:0 2px 16px rgba(0,0,0,.25);}
+    .hdr-top{max-width:1400px;margin:0 auto;padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+    .hdr-brand{display:flex;align-items:center;gap:.8rem;}
+    .brand-icon{font-size:1.6rem;}
+    .brand-text h1{font-family:'Playfair Display',serif;font-size:1.2rem;color:#fff;font-weight:700;line-height:1.1;}
+    .brand-text p{color:var(--goldl);font-size:.72rem;letter-spacing:.04em;margin-top:.1rem;}
+    .hdr-actions{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;}
+    .btn{padding:.46rem .95rem;border-radius:7px;border:none;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.82rem;font-weight:600;display:inline-flex;align-items:center;gap:.38rem;transition:all .2s;white-space:nowrap;}
+    .btn-gold{background:var(--gold);color:var(--gd);}
+    .btn-gold:hover{background:var(--goldl);transform:translateY(-1px);}
+    .btn-school{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.35);}
+    .btn-school:hover,.btn-school.active{background:var(--gold);color:var(--gd);border-color:var(--gold);}
+    .btn-ghost{background:transparent;color:var(--goldl);border:1.5px solid rgba(200,168,75,.5);}
+    .btn-ghost:hover{background:rgba(200,168,75,.1);}
+
+    /* ── Tab bar ── */
+    .tab-bar{max-width:1400px;margin:0 auto;padding:0 1.5rem;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
+    .tab-bar::-webkit-scrollbar{display:none;}
+    .tab-btn{padding:.62rem 1.25rem;border:none;background:transparent;color:rgba(255,255,255,.65);cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.86rem;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;gap:.38rem;}
+    .tab-btn:hover{color:#fff;background:rgba(255,255,255,.08);}
+    .tab-btn.active{color:#fff;border-bottom-color:var(--gold);}
+    .gold-bar{height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--goldl),var(--gold),transparent);}
+
+    /* ── Search / filter ── */
+    .search-strip{background:#fff;border-bottom:1px solid #eee;padding:.6rem 1.5rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;}
+    .search-strip input{flex:1;min-width:180px;padding:.44rem .9rem;border:1.5px solid #e0e0e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.86rem;outline:none;transition:border-color .2s;}
+    .search-strip input:focus{border-color:var(--g);}
+    .chip{padding:.28rem .78rem;border-radius:20px;border:1.5px solid #e0e0e0;background:#fff;cursor:pointer;font-size:.76rem;font-weight:600;color:var(--tm);transition:all .2s;white-space:nowrap;}
+    .chip.active{background:var(--g);color:#fff;border-color:var(--g);}
+    .chip:hover:not(.active){border-color:var(--g);color:var(--g);}
+
+    /* ── Status bar ── */
+    .status-bar{background:rgba(26,92,56,.05);border-bottom:1px solid rgba(26,92,56,.08);padding:.35rem 1.5rem;font-size:.74rem;color:var(--tl);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+    .status-dot{width:7px;height:7px;border-radius:50%;background:#bbb;flex-shrink:0;}
+    .status-dot.live{background:#2e7d32;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+    /* ── Main ── */
+    .main{max-width:1400px;margin:0 auto;padding:1.5rem;transition:margin-right .35s ease;}
+    .main.drawer-open{margin-right:400px;}
+
+    /* ── Tab panels ── */
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;animation:fadeUp .3s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── Section intro ── */
+    .sec-intro{background:#fff;border-radius:var(--rad);padding:.9rem 1.4rem;margin-bottom:1.2rem;box-shadow:var(--sh);border-left:4px solid var(--gold);display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.6rem;}
+    .sec-intro h2{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--gd);}
+    .sec-intro p{font-size:.8rem;color:var(--tl);margin-top:.12rem;}
+    .pills{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem;}
+    .pill{font-size:.7rem;padding:.15rem .55rem;border-radius:12px;background:rgba(26,92,56,.08);color:var(--g);font-weight:600;}
+    .pill.off{background:rgba(200,168,75,.15);color:var(--goldd);}
+
+    /* ── Cards grid ── */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1.1rem;}
+
+    /* ── News card ── */
+    .ncard{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(26,92,56,.08);border-left:4px solid var(--g);transition:all .22s cubic-bezier(.34,1.3,.64,1);display:flex;flex-direction:column;overflow:hidden;}
+    .ncard:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 10px 30px rgba(26,92,56,.16);}
+    .ncard:active{transform:translateY(-1px) scale(0.995);}
+    .ncard.type-dawn    {border-left-color:#c62828;}
+    .ncard.type-geo     {border-left-color:#1565c0;}
+    .ncard.type-ary     {border-left-color:#f57f17;}
+    .ncard.type-tribune {border-left-color:#6a1b9a;}
+    .ncard.type-ilm     {border-left-color:#1a5c38;}
+    .ncard.type-pk      {border-left-color:#c8a84b;}
+    .ncard.type-news    {border-left-color:#0277bd;}
+    .ncard.type-official{border-left-color:var(--gold);}
+
+    .ncard-thumb{width:100%;height:145px;object-fit:cover;background:linear-gradient(135deg,#e8f5e9,#f1f8e9);display:block;transition:opacity .2s;}
+    .ncard:hover .ncard-thumb{opacity:.93;}
+    .ncard-body{padding:.9rem 1.05rem;flex:1;display:flex;flex-direction:column;}
+    .ncard-meta{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-bottom:.45rem;}
+    .src-badge{font-size:.68rem;font-weight:700;padding:.15rem .5rem;border-radius:4px;letter-spacing:.02em;}
+    .sb-official{background:rgba(200,168,75,.18);color:var(--goldd);}
+    .sb-news{background:rgba(26,92,56,.1);color:var(--gd);}
+    .sb-media{background:rgba(21,101,192,.1);color:#1565c0;}
+    .verified{font-size:.62rem;font-weight:700;background:var(--g);color:#fff;padding:.12rem .45rem;border-radius:3px;}
+    .time-ago{font-size:.68rem;color:var(--tl);margin-left:auto;}
+    .ncard{cursor:pointer;}
+    .ncard-title{font-family:'Playfair Display',serif;font-size:.98rem;color:var(--td);font-weight:600;line-height:1.35;margin-bottom:.55rem;flex:1;}
+    .ncard-desc{font-size:.82rem;color:var(--tm);line-height:1.55;margin-bottom:.6rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+    .ncard-foot{border-top:1px solid #f2f2f2;padding:.55rem 1.05rem .7rem;display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;}
+    .ncard-hint{font-size:.7rem;color:var(--tl);margin-left:auto;font-style:italic;}
+    .lbtn{font-size:.74rem;font-weight:600;padding:.28rem .72rem;border-radius:7px;text-decoration:none;display:inline-flex;align-items:center;gap:.28rem;transition:all .18s;border:1.5px solid;cursor:pointer;}
+    .lbtn:active{transform:scale(.96);}
+    .lb-read{background:var(--g);color:#fff;border-color:var(--g);}
+    .lb-read:hover{background:var(--gd);box-shadow:0 3px 10px rgba(26,92,56,.3);}
+    .lb-rel{background:transparent;color:var(--g);border-color:rgba(26,92,56,.3);}
+    .lb-rel:hover{background:rgba(26,92,56,.07);border-color:var(--g);}
+    .lb-yt{background:#c62828;color:#fff;border-color:#c62828;}
+    .lb-yt:hover{background:#b71c1c;box-shadow:0 3px 10px rgba(198,40,40,.3);}
+    .lb-visit{background:var(--gold);color:var(--gd);border-color:var(--gold);}
+    .lb-visit:hover{background:var(--goldl);box-shadow:0 3px 10px rgba(200,168,75,.35);}
+
+    /* ── Article Reader Modal ── */
+    .reader-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:700;opacity:0;pointer-events:none;transition:opacity .25s;display:flex;align-items:flex-start;justify-content:center;padding:2.5vh 1rem;overflow-y:auto;}
+    .reader-overlay.show{opacity:1;pointer-events:all;}
+    .reader-modal{background:#fff;border-radius:14px;width:100%;max-width:740px;box-shadow:0 20px 60px rgba(0,0,0,.3);display:flex;flex-direction:column;overflow:hidden;margin:auto;transform:translateY(18px);transition:transform .25s;}
+    .reader-overlay.show .reader-modal{transform:translateY(0);}
+    .reader-hdr{background:linear-gradient(135deg,var(--gd),var(--g));padding:1rem 1.3rem;display:flex;align-items:flex-start;gap:.8rem;}
+    .reader-hdr-info{flex:1;min-width:0;}
+    .reader-meta{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-bottom:.5rem;}
+    .reader-title{font-family:'Playfair Display',serif;font-size:1.15rem;color:#fff;font-weight:700;line-height:1.35;}
+    .reader-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s;margin-top:.1rem;}
+    .reader-close:hover{background:rgba(255,255,255,.3);}
+    .reader-thumb{width:100%;max-height:240px;object-fit:cover;display:block;}
+    .reader-body{padding:1.3rem 1.5rem;flex:1;}
+    .reader-excerpt{font-size:.92rem;color:var(--td);line-height:1.75;white-space:pre-wrap;}
+    .reader-fulltext{font-size:.9rem;color:var(--tm);line-height:1.75;margin-top:1rem;padding-top:1rem;border-top:1px solid #eee;white-space:pre-wrap;}
+    .reader-foot{padding:.9rem 1.5rem;border-top:1px solid #eee;display:flex;gap:.55rem;flex-wrap:wrap;align-items:center;background:#fafafa;}
+    .reader-status{font-size:.76rem;color:var(--tl);margin-left:auto;font-style:italic;}
+
+    /* ── Official source card (static) ── */
+    .off-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(200,168,75,.1);border-left:4px solid var(--gold);padding:1.1rem 1.2rem;transition:all .22s cubic-bezier(.34,1.3,.64,1);}
+    .off-card:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 10px 28px rgba(200,168,75,.22);}
+    .off-icon{font-size:1.8rem;margin-bottom:.5rem;}
+    .off-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--gd);font-weight:700;margin-bottom:.2rem;}
+    .off-url{font-size:.72rem;color:var(--tl);margin-bottom:.5rem;}
+    .off-desc{font-size:.82rem;color:var(--tm);line-height:1.5;margin-bottom:.7rem;}
+    .off-links{display:flex;flex-wrap:wrap;gap:.4rem;}
+    .off-lbtn{font-size:.72rem;font-weight:600;padding:.22rem .6rem;border-radius:5px;text-decoration:none;background:rgba(26,92,56,.08);color:var(--g);border:1.5px solid rgba(26,92,56,.2);transition:all .2s;white-space:nowrap;}
+    .off-lbtn:hover{background:var(--g);color:#fff;}
+    .off-lbtn.primary{background:var(--g);color:#fff;border-color:var(--g);}
+    .off-lbtn.primary:hover{background:var(--gd);}
+
+    /* ── YouTube channel card ── */
+    .yt-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(198,40,40,.08);border-left:4px solid #c62828;padding:1.1rem 1.2rem;transition:all .22s cubic-bezier(.34,1.3,.64,1);}
+    .yt-card:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 10px 28px rgba(198,40,40,.18);}
+    .yt-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem;}
+    .yt-logo{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#c62828,#e53935);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+    .yt-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--td);font-weight:700;}
+    .yt-subs{font-size:.72rem;color:var(--tl);}
+    .yt-desc{font-size:.82rem;color:var(--tm);line-height:1.5;margin-bottom:.5rem;}
+    .yt-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.7rem;}
+    .yt-tag{font-size:.7rem;padding:.14rem .5rem;border-radius:12px;background:rgba(198,40,40,.08);color:#c62828;font-weight:600;}
+    .yt-foot{display:flex;gap:.4rem;flex-wrap:wrap;}
+
+    /* ── Headline (24h) cards ── */
+    .hcard{background:#fff;border-radius:var(--rad);box-shadow:var(--sh);padding:0;transition:all .22s;cursor:pointer;display:flex;flex-direction:column;overflow:hidden;}
+    .hcard:hover{transform:translateY(-2px);box-shadow:var(--sh2);}
+    .hcard-top{display:flex;align-items:stretch;gap:0;}
+    .hcard-accent{width:5px;flex-shrink:0;border-radius:var(--rad) 0 0 0;}
+    .hcard-inner{padding:.75rem 1rem;flex:1;min-width:0;}
+    .hcard-meta{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.35rem;}
+    .hcard-flag{font-size:.85rem;}
+    .hcard-src{font-size:.68rem;font-weight:700;color:var(--gd);background:rgba(26,92,56,.1);padding:.12rem .45rem;border-radius:4px;letter-spacing:.02em;}
+    .hcard-src.intl{color:#bb1919;background:rgba(187,25,25,.09);}
+    .hcard-time{font-size:.68rem;color:var(--tl);margin-left:auto;font-weight:600;}
+    .hcard-time.new{color:#2e7d32;font-weight:700;}
+    .hcard-title{font-family:'Playfair Display',serif;font-size:.93rem;color:var(--td);font-weight:600;line-height:1.38;margin-bottom:.38rem;}
+    .hcard-summary{font-size:.8rem;color:var(--tm);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .hcard-foot{border-top:1px solid #f5f5f5;padding:.4rem .8rem .45rem;display:flex;gap:.4rem;align-items:center;}
+    .hcard-btn{font-size:.7rem;font-weight:600;padding:.18rem .55rem;border-radius:4px;border:1.5px solid;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:.22rem;transition:all .18s;background:none;}
+    .hcard-btn.pri{background:var(--g);color:#fff;border-color:var(--g);}
+    .hcard-btn.pri:hover{background:var(--gd);}
+    .hcard-btn.sec{color:var(--g);border-color:rgba(26,92,56,.28);}
+    .hcard-btn.sec:hover{background:rgba(26,92,56,.07);}
+    .h24-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:.85rem;}
+    .h24-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;flex-wrap:wrap;gap:.5rem;}
+    .h24-count{font-size:.78rem;color:var(--tl);font-style:italic;}
+    .live-dot{width:8px;height:8px;border-radius:50%;background:#2e7d32;display:inline-block;margin-right:.35rem;animation:pulse 1.5s infinite;}
+
+    /* ── Skeleton ── */
+    .sk{background:linear-gradient(90deg,#f0f0f0 25%,#e6e6e6 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .sk-card{height:200px;border-radius:var(--rad);}
+
+    /* ── Empty / error ── */
+    .empty{text-align:center;padding:2.5rem 1rem;color:var(--tl);grid-column:1/-1;}
+    .empty .ico{font-size:2.2rem;margin-bottom:.6rem;}
+    .empty h3{font-family:'Playfair Display',serif;font-size:1rem;color:var(--tm);margin-bottom:.35rem;}
+    .empty p{font-size:.82rem;line-height:1.6;}
+
+    /* ── Load more ── */
+    .load-more-wrap{text-align:center;margin-top:1.2rem;}
+
+    /* ── MY SCHOOL DRAWER ── */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:490;opacity:0;pointer-events:none;transition:opacity .3s;}
+    .overlay.show{opacity:1;pointer-events:all;}
+    .drawer{position:fixed;top:0;right:0;bottom:0;width:385px;background:#fff;z-index:500;box-shadow:-5px 0 28px rgba(0,0,0,.18);transform:translateX(110%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+    .drawer.open{transform:translateX(0);}
+    .dr-hdr{background:linear-gradient(135deg,var(--gd),var(--g));padding:1rem 1.25rem;flex-shrink:0;}
+    .dr-hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;}
+    .dr-hdr h2{font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;font-weight:700;}
+    .dr-hdr p{color:var(--goldl);font-size:.72rem;}
+    .dr-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+    .dr-close:hover{background:rgba(255,255,255,.3);}
+    .dr-tabs{display:flex;}
+    .dtab{flex:1;padding:.48rem;border:none;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);cursor:pointer;font-size:.78rem;font-weight:600;border-bottom:2px solid transparent;transition:all .2s;}
+    .dtab.active{color:#fff;background:rgba(255,255,255,.18);border-bottom-color:var(--gold);}
+    .dr-body{flex:1;overflow-y:auto;padding:1rem;}
+    .dtool{display:none;}
+    .dtool.active{display:block;animation:fadeUp .22s ease;}
+    .dr-label{font-size:.78rem;color:var(--tl);margin-bottom:.8rem;line-height:1.5;}
+    .ti{width:100%;padding:.46rem .72rem;border:1.5px solid #e0e0e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.83rem;outline:none;margin-bottom:.45rem;}
+    .ti:focus{border-color:var(--g);}
+    .ta{width:100%;padding:.46rem .72rem;border:1.5px solid #e0e0e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.83rem;outline:none;resize:vertical;min-height:58px;margin-bottom:.45rem;}
+    .ta:focus{border-color:var(--g);}
+    .ti-row{display:flex;gap:.4rem;margin-bottom:.45rem;}
+    .ti-row .ti{margin-bottom:0;}
+    .add-btn{width:100%;padding:.48rem;background:var(--g);color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.83rem;font-weight:600;margin-bottom:.9rem;transition:background .2s;}
+    .add-btn:hover{background:var(--gd);}
+    .ti-item{background:var(--cream);border-radius:8px;padding:.75rem;margin-bottom:.5rem;border-left:3px solid var(--gold);position:relative;}
+    .ti-item.cal{border-left-color:var(--g);}
+    .ti-item.fee{border-left-color:#c62828;}
+    .ti-ititle{font-weight:600;font-size:.85rem;color:var(--td);margin-bottom:.15rem;}
+    .ti-ibody{font-size:.78rem;color:var(--tm);line-height:1.5;}
+    .ti-idate{font-size:.68rem;color:var(--tl);margin-top:.25rem;}
+    .ti-del{position:absolute;top:.5rem;right:.5rem;background:none;border:none;color:#ccc;cursor:pointer;font-size:.85rem;padding:.18rem;border-radius:4px;transition:color .2s;}
+    .ti-del:hover{color:#c62828;}
+    .date-pill{display:inline-block;background:var(--g);color:#fff;font-size:.67rem;font-weight:700;padding:.12rem .45rem;border-radius:4px;margin-bottom:.28rem;}
+    .amt{font-size:.95rem;font-weight:700;color:#c62828;margin-bottom:.15rem;}
+    .ti-empty{text-align:center;color:var(--tl);font-size:.8rem;padding:1.2rem 0;font-style:italic;}
+
+    /* ── Saved news items in drawer ── */
+    .sv-item{background:#fff;border:1.5px solid #eee;border-radius:10px;padding:.7rem .85rem;margin-bottom:.55rem;position:relative;transition:box-shadow .2s;}
+    .sv-item:hover{box-shadow:0 2px 12px rgba(26,92,56,.1);}
+    .sv-item-title{font-size:.84rem;font-weight:600;color:var(--td);line-height:1.35;margin-bottom:.28rem;padding-right:1.5rem;}
+    .sv-item-meta{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;margin-bottom:.45rem;}
+    .sv-badge{font-size:.62rem;font-weight:700;padding:.1rem .38rem;border-radius:4px;}
+    .sv-badge-src{background:rgba(26,92,56,.1);color:var(--gd);}
+    .sv-badge-24h{background:rgba(198,40,40,.1);color:#c62828;}
+    .sv-badge-manual{background:rgba(200,168,75,.15);color:var(--goldd);}
+    .sv-date{font-size:.66rem;color:var(--tl);}
+    .sv-desc{font-size:.77rem;color:var(--tm);line-height:1.5;margin-bottom:.45rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .sv-notes{font-size:.75rem;color:var(--g);background:rgba(26,92,56,.06);border-radius:5px;padding:.28rem .5rem;margin-bottom:.45rem;font-style:italic;}
+    .sv-actions{display:flex;gap:.35rem;flex-wrap:wrap;}
+    .sv-btn{font-size:.7rem;font-weight:600;padding:.2rem .55rem;border-radius:5px;border:1.5px solid;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.2rem;transition:all .15s;background:none;}
+    .sv-btn:active{transform:scale(.96);}
+    .sv-btn.pri{background:var(--g);color:#fff;border-color:var(--g);}
+    .sv-btn.pri:hover{background:var(--gd);}
+    .sv-btn.sec{color:var(--g);border-color:rgba(26,92,56,.3);}
+    .sv-btn.sec:hover{background:rgba(26,92,56,.07);}
+    .sv-count{font-size:.72rem;background:var(--g);color:#fff;border-radius:10px;padding:.08rem .42rem;font-weight:700;margin-left:.4rem;}
+    /* save button on cards */
+    .save-btn{font-size:.7rem;font-weight:600;padding:.2rem .52rem;border-radius:5px;border:1.5px solid rgba(26,92,56,.3);cursor:pointer;background:none;color:var(--g);transition:all .18s;display:inline-flex;align-items:center;gap:.2rem;}
+    .save-btn:hover{background:rgba(26,92,56,.08);border-color:var(--g);}
+    .save-btn.saved{background:var(--g);color:#fff;border-color:var(--g);}
+
+    /* ── Toast ── */
+    .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gd);color:#fff;padding:.7rem 1.3rem;border-radius:8px;font-size:.83rem;font-weight:500;box-shadow:0 5px 18px rgba(0,0,0,.2);z-index:999;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none;}
+    .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+    /* ── Responsive ── */
+    @media(max-width:900px){.main.drawer-open{margin-right:0;}.drawer{width:100%;}}
+    @media(max-width:768px){.hdr-top{padding:.7rem 1rem;}.main{padding:1rem;}.cards-grid{grid-template-columns:1fr;}.brand-text h1{font-size:1rem;}}
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-top">
+    <a href="./index.html" style="color:rgba(255,255,255,.6);text-decoration:none;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:.3rem;padding:.3rem .6rem;border-radius:6px;border:1px solid rgba(255,255,255,.2);transition:all .2s;flex-shrink:0" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='none'">&#8249; Home</a>
+    <div class="hdr-brand">
+      <div class="brand-icon">🏫</div>
+      <div class="brand-text">
+        <h1>School Command Centre</h1>
+        <p>Faisalabad, Punjab &nbsp;·&nbsp; Matric Level Education News</p>
+      </div>
+    </div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost" id="rfBtn" onclick="refreshCurrent()"><span id="rfIco">🔄</span> Refresh</button>
+      <button class="btn btn-school" id="msBtn" onclick="toggleDrawer()">🏫 My School</button>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tb-top"      onclick="switchTab('top')">📊 Top Stories</button>
+    <button class="tab-btn"        id="tb-official" onclick="switchTab('official')">🏛️ Official Sources</button>
+    <button class="tab-btn"        id="tb-news"     onclick="switchTab('news')">📰 News Sites</button>
+    <button class="tab-btn"        id="tb-youtube"  onclick="switchTab('youtube')">📺 YouTube</button>
+    <button class="tab-btn"        id="tb-recent"   onclick="switchTab('recent')" style="position:relative">
+      ⚡ Last 24 Hours
+      <span id="h24badge" style="display:none;position:absolute;top:6px;right:6px;background:#c62828;color:#fff;font-size:.58rem;font-weight:700;padding:.08rem .32rem;border-radius:8px;line-height:1.4"></span>
+    </button>
+  </div>
+  <div class="gold-bar"></div>
+</header>
+
+<!-- Search strip -->
+<div class="search-strip">
+  <span style="color:var(--g);font-size:1rem;">🔍</span>
+  <input type="text" id="srchIn" placeholder="Search news, circulars, exams, results…" oninput="applyFilter()"/>
+  <button class="chip active" data-f="all"      onclick="setChip(this)">All</button>
+  <button class="chip"        data-f="official" onclick="setChip(this)">✓ Official</button>
+  <button class="chip"        data-f="news"     onclick="setChip(this)">News</button>
+  <button class="chip"        data-f="yt"       onclick="setChip(this)">YouTube</button>
+</div>
+
+<!-- Status bar -->
+<div class="status-bar" id="statusBar">
+  <span class="status-dot" id="statusDot"></span>
+  <span id="statusTxt">Loading news from Pakistani education sources…</span>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main" id="mainWrap">
+
+  <!-- ── TOP STORIES ── -->
+  <div class="tab-panel active" id="panel-top">
+    <div class="sec-intro">
+      <div>
+        <h2>📊 Top Stories</h2>
+        <p>Education news combined from all Pakistani sources — filtered for school relevance</p>
+        <div class="pills">
+          <span class="pill off">BISE Faisalabad</span><span class="pill off">Punjab SED</span>
+          <span class="pill">Dawn</span><span class="pill">Geo</span>
+          <span class="pill">ARY News</span><span class="pill">Express Tribune</span>
+          <span class="pill">Ilm Ki Dunya</span><span class="pill">Daily Pakistan</span><span class="pill">+ more</span>
+        </div>
+      </div>
+      <span id="topUpdated" style="font-size:.7rem;color:var(--tl);white-space:nowrap;"></span>
+    </div>
+    <div class="cards-grid" id="grid-top">
+      <div class="sk sk-card"></div><div class="sk sk-card"></div><div class="sk sk-card"></div>
+      <div class="sk sk-card"></div><div class="sk sk-card"></div><div class="sk sk-card"></div>
+    </div>
+    <div class="load-more-wrap" id="more-top" style="display:none">
+      <button class="btn btn-ghost" onclick="loadMoreTop()">Load more stories…</button>
+    </div>
+  </div>
+
+  <!-- ── OFFICIAL SOURCES ── -->
+  <div class="tab-panel" id="panel-official">
+    <div class="sec-intro">
+      <div>
+        <h2>🏛️ Official Government Sources</h2>
+        <p>Direct links to Pakistan's education authorities — click any card to visit the official site</p>
+        <div class="pills">
+          <span class="pill off">bisefsd.edu.pk</span><span class="pill off">sed.punjab.gov.pk</span>
+          <span class="pill off">pctb.punjab.gov.pk</span><span class="pill off">pec.edu.pk</span>
+          <span class="pill off">mofept.gov.pk</span><span class="pill off">fbise.edu.pk</span>
+          <span class="pill off">hec.gov.pk</span>
+        </div>
+      </div>
+    </div>
+    <div class="cards-grid" id="grid-official"></div>
+  </div>
+
+  <!-- ── NEWS SITES ── -->
+  <div class="tab-panel" id="panel-news">
+    <div class="sec-intro">
+      <div>
+        <h2>📰 Pakistan Education News Sites</h2>
+        <p>Live articles from Pakistan's education portals and national newspapers</p>
+        <div class="pills">
+          <span class="pill">ilmkidunya.com</span><span class="pill">eduvision.edu.pk</span>
+          <span class="pill">taleem360.com</span><span class="pill">dawn.com</span>
+          <span class="pill">geo.tv</span><span class="pill">arynews.tv</span>
+          <span class="pill">tribune.com.pk</span><span class="pill">thenews.com.pk</span>
+          <span class="pill">dailypakistan.com.pk</span><span class="pill">pakistantoday.com.pk</span>
+          <span class="pill">propakistani.pk</span><span class="pill">bloompakistan.com</span>
+        </div>
+      </div>
+    </div>
+    <div class="cards-grid" id="grid-news">
+      <div class="sk sk-card"></div><div class="sk sk-card"></div>
+      <div class="sk sk-card"></div><div class="sk sk-card"></div>
+    </div>
+  </div>
+
+  <!-- ── YOUTUBE ── -->
+  <div class="tab-panel" id="panel-youtube">
+    <div class="sec-intro">
+      <div>
+        <h2>📺 Pakistan Education YouTube Channels</h2>
+        <p>Top channels covering education news, BISE results, exam guides and school updates — click to visit</p>
+      </div>
+    </div>
+    <div class="cards-grid" id="grid-youtube"></div>
+  </div>
+
+  <!-- ── LAST 24 HOURS ── -->
+  <div class="tab-panel" id="panel-recent">
+    <div class="sec-intro">
+      <div>
+        <h2>⚡ Breaking &amp; Recent — Last 24 Hours</h2>
+        <p>All news from the past 24 hours — Pakistani national news + international headlines — with summaries. Click any card to read more in-app.</p>
+        <div class="pills" style="margin-top:.5rem">
+          <span class="pill">🇵🇰 Pakistani Sources</span>
+          <span class="pill">🌍 International</span>
+          <span class="pill">📋 Summaries Only</span>
+          <span class="pill off">Auto-sorted newest first</span>
+        </div>
+      </div>
+      <button class="btn btn-gold" onclick="loadRecent(true)" style="flex-shrink:0">⟳ Refresh</button>
+    </div>
+    <div class="h24-header">
+      <div><span class="live-dot"></span><span id="h24-status" style="font-size:.8rem;color:var(--tl)">Loading…</span></div>
+      <span class="h24-count" id="h24-count"></span>
+    </div>
+    <div class="h24-list" id="grid-recent"></div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ══ MY SCHOOL DRAWER ══ -->
+<div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="dr-hdr">
+    <div class="dr-hdr-top">
+      <div><h2>🏫 My School</h2><p>Private tools — Faisalabad school</p></div>
+      <button class="dr-close" onclick="toggleDrawer()">✕</button>
+    </div>
+    <div class="dr-tabs">
+      <button class="dtab active" onclick="drTab('notices',this)">📌 Notices</button>
+      <button class="dtab"        onclick="drTab('calendar',this)">📅 Calendar</button>
+      <button class="dtab"        onclick="drTab('fees',this)">💰 Fees</button>
+      <button class="dtab"        onclick="drTab('saved',this)" id="saved-dtab">🔖 Saved<span class="sv-count" id="sv-tab-count" style="display:none"></span></button>
+    </div>
+  </div>
+  <div class="dr-body">
+
+    <!-- Notices -->
+    <div class="dtool active" id="dt-notices">
+      <p class="dr-label">Private notices for your school — saved in this browser.</p>
+      <input  class="ti" id="n-title" placeholder="Notice title…"/>
+      <textarea class="ta" id="n-body" placeholder="Notice details (optional)…"></textarea>
+      <button class="add-btn" onclick="addNotice()">+ Add Notice</button>
+      <div id="notices-list"></div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="dtool" id="dt-calendar">
+      <p class="dr-label">Track your school's key dates — PTM, tests, events, etc.</p>
+      <div class="ti-row">
+        <input class="ti" id="c-date" type="date" style="flex:0 0 138px"/>
+        <input class="ti" id="c-title" placeholder="Event name…"/>
+      </div>
+      <textarea class="ta" id="c-body" placeholder="Notes (optional)…"></textarea>
+      <button class="add-btn" onclick="addEvent()">+ Add Event</button>
+      <div id="cal-list"></div>
+    </div>
+
+    <!-- Fees -->
+    <div class="dtool" id="dt-fees">
+      <p class="dr-label">Fee deadlines, BISE challan dates, payment reminders.</p>
+      <div class="ti-row">
+        <input class="ti" id="f-date" type="date" style="flex:0 0 138px"/>
+        <input class="ti" id="f-amt" placeholder="Amount e.g. Rs. 1500"/>
+      </div>
+      <input class="ti" id="f-title" placeholder="Description e.g. BISE registration fee"/>
+      <button class="add-btn" onclick="addFee()">+ Add Fee Note</button>
+      <div id="fees-list"></div>
+    </div>
+
+    <!-- Saved News -->
+    <div class="dtool" id="dt-saved">
+      <p class="dr-label">News you've saved for later — stays permanently. Click 🔖 on any article to save it here.</p>
+
+      <!-- Manual add form -->
+      <details style="margin-bottom:.9rem">
+        <summary style="font-size:.78rem;font-weight:600;color:var(--gd);cursor:pointer;padding:.3rem 0;user-select:none">+ Add news manually</summary>
+        <div style="margin-top:.55rem">
+          <input  class="ti" id="sv-title"  placeholder="News headline / title…"/>
+          <input  class="ti" id="sv-source" placeholder="Source name (e.g. Dawn, BBC)…"/>
+          <input  class="ti" id="sv-url"    placeholder="Article URL (optional)…" type="url"/>
+          <textarea class="ta" id="sv-notes" placeholder="Your notes or summary…"></textarea>
+          <button class="add-btn" onclick="addManualSaved()">🔖 Save This News</button>
+        </div>
+      </details>
+
+      <div id="saved-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ── Article Reader Modal ── -->
+<div class="reader-overlay" id="readerOverlay" onclick="closeReader(event)">
+  <div class="reader-modal" id="readerModal">
+    <div class="reader-hdr">
+      <div class="reader-hdr-info">
+        <div class="reader-meta" id="readerMeta"></div>
+        <div class="reader-title" id="readerTitle"></div>
+      </div>
+      <button class="reader-close" onclick="closeReaderBtn()">✕</button>
+    </div>
+    <img class="reader-thumb" id="readerThumb" src="" alt="" style="display:none"/>
+    <div class="reader-body">
+      <div class="reader-excerpt" id="readerExcerpt"></div>
+      <div class="reader-fulltext" id="readerFullText" style="display:none"></div>
+    </div>
+    <div class="reader-foot">
+      <button class="lbtn lb-read" id="readerFetchBtn" onclick="fetchFullText()">📄 Load Full Article Text</button>
+      <a class="lbtn lb-rel" id="readerOpenBtn" href="#" target="_blank" rel="noopener">🔗 Open Original Article</a>
+      <button class="save-btn" id="readerSaveBtn" onclick="saveFromReader()" style="margin-left:auto">🔖 Save to My School</button>
+      <span class="reader-status" id="readerStatus"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+const RSS_SOURCES = [
+  { id:'dawn',     name:'Dawn Education',    url:'https://www.dawn.com/feeds/education',                cat:'top,news',        color:'#c62828', flag:'🇵🇰' },
+  { id:'geo',      name:'Geo News',          url:'https://www.geo.tv/rss/1/2',                          cat:'top,news',        color:'#1565c0', flag:'🇵🇰' },
+  { id:'ary',      name:'ARY News',          url:'https://arynews.tv/feed/',                            cat:'top,news',        color:'#f57f17', flag:'🇵🇰' },
+  { id:'tribune',  name:'Express Tribune',   url:'https://tribune.com.pk/feeds/pakistan',               cat:'top,news',        color:'#6a1b9a', flag:'🇵🇰' },
+  { id:'thenews',  name:'The News',          url:'https://www.thenews.com.pk/rss/1/7',                  cat:'top,news',        color:'#0277bd', flag:'🇵🇰' },
+  { id:'dpak',     name:'Daily Pakistan',    url:'https://en.dailypakistan.com.pk/feed/',               cat:'top,news',        color:'#2e7d32', flag:'🇵🇰' },
+  { id:'pktoday',  name:'Pakistan Today',    url:'https://www.pakistantoday.com.pk/feed/',              cat:'top,news',        color:'#4a148c', flag:'🇵🇰' },
+  { id:'bloom',    name:'Bloom Pakistan',    url:'https://bloompakistan.com/feed/',                     cat:'top,news',        color:'#1a5c38', flag:'🇵🇰' },
+  { id:'propak',   name:'ProPakistani',      url:'https://propakistani.pk/feed/',                       cat:'news',            color:'#c8a84b', flag:'🇵🇰' },
+  { id:'ilm',      name:'Ilm Ki Dunya',      url:'https://www.ilmkidunya.com/feed/',                   cat:'top,news',        color:'#1a5c38', flag:'🇵🇰' },
+  { id:'eduvision',name:'EduVision',         url:'https://www.eduvision.edu.pk/feed',                  cat:'top,news',        color:'#1a5c38', flag:'🇵🇰' },
+  { id:'bbc',      name:'BBC News',          url:'https://feeds.bbci.co.uk/news/rss.xml',              cat:'recent',          color:'#bb1919', flag:'🌍' },
+  { id:'bbcworld', name:'BBC World',         url:'https://feeds.bbci.co.uk/news/world/rss.xml',        cat:'recent',          color:'#bb1919', flag:'🌍' },
+  { id:'aljaz',    name:'Al Jazeera',        url:'https://www.aljazeera.com/xml/rss/all.xml',          cat:'recent',          color:'#f5a623', flag:'🌍' },
+  { id:'dawn24',   name:'Dawn (All)',        url:'https://www.dawn.com/feeds/home',                    cat:'recent,top,news', color:'#c62828', flag:'🇵🇰' },
+  { id:'geo24',    name:'Geo News (All)',    url:'https://www.geo.tv/rss/1/1',                         cat:'recent',          color:'#1565c0', flag:'🇵🇰' },
+  { id:'ary24',    name:'ARY News (All)',    url:'https://arynews.tv/feed/',                           cat:'recent',          color:'#f57f17', flag:'🇵🇰' },
+  { id:'reuters',  name:'Reuters',           url:'https://feeds.reuters.com/reuters/topNews',          cat:'recent',          color:'#ff8000', flag:'🌍' },
+  { id:'tribune24',name:'Express Tribune',  url:'https://tribune.com.pk/feeds/latest',                cat:'recent',          color:'#6a1b9a', flag:'🇵🇰' },
+];
+
+const EDU_KW = [
+  'school','education','student','teacher','exam','board','bise','matric',
+  'holiday','vacation','syllabus','curriculum','result','fee','admission',
+  'punjab','sed','pctb','pec','scholarship','class','grade','academic',
+  'learning','institute','university','college','textbook','date sheet',
+  'datesheet','registration','challan','annual','supplementary','annual exam',
+  'تعلیم','اسکول','امتحان','طالب','مدرسہ','چھٹی','نتیجہ','داخلہ'
+];
+
+function isEduRelated(item) {
+  const txt = ((item.title||'') + ' ' + (item.description||'') + ' ' + (item.categories||[]).join(' ')).toLowerCase();
+  return EDU_KW.some(k => txt.includes(k.toLowerCase()));
+}
+
+const OFFICIAL_SOURCES = [
+  { icon:'🎓', name:'BISE Faisalabad', url:'https://bisefsd.edu.pk', badge:'Official Board',
+    desc:'Board of Intermediate &amp; Secondary Education Faisalabad — Matric &amp; FA/FSc exams, date sheets, results, and official notifications for your district.',
+    links:[ { label:'🏠 Official Site', href:'https://bisefsd.edu.pk', primary:true }, { label:'📅 Date Sheets', href:'https://bisefsd.edu.pk/datesheet' }, { label:'📋 Results', href:'https://bisefsd.edu.pk/result' }, { label:'🔔 Notifications', href:'https://bisefsd.edu.pk/notification' }, { label:'📝 Registration', href:'https://bisefsd.edu.pk/registration' } ] },
+  { icon:'🏛️', name:'Punjab School Education Dept.', url:'https://schools.punjab.gov.pk', badge:'Provincial Govt',
+    desc:'Punjab SED issues all school holiday notifications, teacher policy orders, school regulations, and circulars for all government and private schools across Punjab.',
+    links:[ { label:'🏠 SED Punjab', href:'https://schools.punjab.gov.pk', primary:true }, { label:'📢 Notifications', href:'https://schools.punjab.gov.pk/notification' }, { label:'📋 Policies', href:'https://schools.punjab.gov.pk/policies' } ] },
+  { icon:'📚', name:'Punjab Curriculum &amp; Textbook Board', url:'https://pctb.punjab.gov.pk', badge:'Official PCTB',
+    desc:'PCTB publishes and distributes textbooks for Classes 1–12 in Punjab. All syllabus changes, new book releases, and curriculum updates come through PCTB.',
+    links:[ { label:'🏠 PCTB Official', href:'https://pctb.punjab.gov.pk', primary:true }, { label:'📖 E-Books', href:'https://pctb.punjab.gov.pk/ebooks' }, { label:'📢 News', href:'https://pctb.punjab.gov.pk/news' } ] },
+  { icon:'📝', name:'Punjab Examination Commission', url:'https://pec.edu.pk', badge:'Official PEC',
+    desc:'PEC conducts Grade 5 and Grade 8 annual exams across Punjab. Registration schedules, date sheets, roll number slips, and results are all published here.',
+    links:[ { label:'🏠 PEC Official', href:'https://pec.edu.pk', primary:true }, { label:'📅 Schedule', href:'https://pec.edu.pk/examschedule' }, { label:'📋 Results', href:'https://pec.edu.pk/result' } ] },
+  { icon:'🇵🇰', name:'Ministry of Federal Education', url:'https://mofept.gov.pk', badge:'Federal Govt',
+    desc:'Federal Ministry issues national education policy, Single National Curriculum updates, and federal-level directives affecting all schools in Pakistan.',
+    links:[ { label:'🏠 Ministry', href:'https://mofept.gov.pk', primary:true }, { label:'📰 News', href:'https://mofept.gov.pk/News' }, { label:'📢 Notifications', href:'https://mofept.gov.pk/Notification' } ] },
+  { icon:'📜', name:'Federal Board (FBISE)', url:'https://fbise.edu.pk', badge:'Federal Board',
+    desc:'Federal Board of Intermediate &amp; Secondary Education for Islamabad Capital Territory and cantonment areas. Matric and inter date sheets, results and registration.',
+    links:[ { label:'🏠 FBISE', href:'https://fbise.edu.pk', primary:true }, { label:'📅 Date Sheets', href:'https://fbise.edu.pk/datesheet' }, { label:'📋 Results', href:'https://fbise.edu.pk/result' } ] },
+  { icon:'🎓', name:'Higher Education Commission', url:'https://hec.gov.pk', badge:'Federal HEC',
+    desc:'HEC regulates higher education in Pakistan. Relevant for tracking university admissions, degree attestation policies, and education quality standards.',
+    links:[ { label:'🏠 HEC', href:'https://hec.gov.pk', primary:true }, { label:'📢 News', href:'https://hec.gov.pk/site/news' }, { label:'🔔 Announcements', href:'https://hec.gov.pk/site/announcement' } ] },
+  { icon:'📊', name:'Pakistan Bureau of Curriculum', url:'https://pbc.edu.pk', badge:'Official PBC',
+    desc:'PBC designs curriculum frameworks and evaluation standards for schools in Pakistan, coordinating with provinces on national curriculum alignment.',
+    links:[ { label:'🏠 PBC', href:'https://pbc.edu.pk', primary:true }, { label:'📚 Curriculum', href:'https://pbc.edu.pk/curriculum' } ] },
+];
+
+const YT_CHANNELS = [
+  { name:'Ilm Ki Dunya', channel:'@ilmkidunya', url:'https://www.youtube.com/@ilmkidunya', search:'https://www.youtube.com/results?search_query=ilm+ki+dunya+pakistan+education', subs:'6M+ subscribers', desc:"Pakistan's most popular education channel — covers Matric &amp; FSc date sheets, BISE results, roll number slips, exam news and education updates across all provinces.", tags:['Matric Results','Date Sheets','BISE News','Exam Tips','Punjab SED'] },
+  { name:'Taleem City', channel:'@taleemcity', url:'https://www.youtube.com/@taleemcity', search:'https://www.youtube.com/results?search_query=taleem+city+pakistan+education+news', subs:'1M+ subscribers', desc:'Covers Pakistan education news, BISE updates, scholarship announcements, and school policy changes. Regular uploads on matric and inter exam schedules.', tags:['Education News','BISE Updates','Scholarships','School Policy'] },
+  { name:'Education News Pakistan', channel:'Education News PK', url:'https://www.youtube.com/results?search_query=pakistan+education+news+latest', search:'https://www.youtube.com/results?search_query=pakistan+education+news+2026', subs:'Various channels', desc:'Search YouTube for the latest Pakistani education news videos — covers holiday announcements, result declarations, teacher strikes, and government education orders.', tags:['Breaking News','Holiday Notices','Teacher Policy','Govt Orders'] },
+  { name:'Punjab Education TV', channel:'@punjabeducation', url:'https://www.youtube.com/results?search_query=punjab+school+education+department+2026', search:'https://www.youtube.com/results?search_query=punjab+SED+circular+2026', subs:'Official &amp; news channels', desc:"Covers Punjab School Education Department announcements, school holiday notifications, teacher transfers, and provincial education policy circulars.", tags:['Punjab SED','Holiday Circulars','Teacher Transfer','Policy News'] },
+  { name:'Sabaq Foundation', channel:'@sabaqpk', url:'https://www.youtube.com/@sabaqpk', search:'https://www.youtube.com/results?search_query=sabaq+foundation+matric+class', subs:'300K+ subscribers', desc:'Free online education for Pakistani students — full video lectures for Matric (9th &amp; 10th class) covering all subjects aligned with Punjab board syllabus.', tags:['Matric Lectures','9th Class','10th Class','Free Education','All Subjects'] },
+  { name:'Study Online Pakistan', channel:'Study Online PK', url:'https://www.youtube.com/results?search_query=study+online+pakistan+matric', search:'https://www.youtube.com/results?search_query=matric+online+class+punjab+2026', subs:'Multiple channels', desc:'Online study resources and video lectures for matric students in Pakistan. Covers past papers, important questions, and exam preparation strategies.', tags:['Matric Prep','Past Papers','Important Questions','Exam Strategy'] },
+  { name:'BISE Updates Pakistan', channel:'BISE Pakistan', url:'https://www.youtube.com/results?search_query=BISE+faisalabad+update+2026', search:'https://www.youtube.com/results?search_query=BISE+result+2026+pakistan', subs:'Various channels', desc:'Tracks BISE exam updates across all Punjab boards including Faisalabad — date sheet announcements, result countdowns, registration deadlines and fee challan news.', tags:['BISE Faisalabad','Date Sheet 2026','Matric Result','Registration'] },
+  { name:'Pakistan Teachers Forum', channel:'Teachers PK', url:'https://www.youtube.com/results?search_query=pakistan+teachers+news+2026', search:'https://www.youtube.com/results?search_query=punjab+teacher+policy+news', subs:'Teacher community', desc:'News and updates relevant to school teachers in Punjab — NTS tests, teacher recruitment, salary increases, transfer policies, and professional development.', tags:['Teacher Policy','NTS Tests','Recruitment','Salary News','Transfers'] },
+];
+
+let curTab='top', activeFilter='all', tabLoaded={}, allTopItems=[], topPage=0;
+const PAGE_SIZE=12;
+let drawerOpen=false;
+
+const PROXIES = [
+  { type:'rss2json',   base:'https://api.rss2json.com/v1/api.json?count=30&rss_url=' },
+  { type:'corsproxy',  base:'https://corsproxy.io/?' },
+  { type:'allorigins', base:'https://api.allorigins.win/raw?url=' },
+  { type:'codetabs',   base:'https://api.codetabs.com/v1/proxy?quest=' },
+];
+
+function stripHtml(html) { const t=document.createElement('div'); t.innerHTML=html||''; return t.textContent||t.innerText||''; }
+
+function relTime(dateStr) {
+  if (!dateStr) return '';
+  const d=new Date(dateStr); if(isNaN(d)) return dateStr;
+  const diff=Date.now()-d.getTime(), mins=Math.floor(diff/60000);
+  if(mins<2) return 'just now'; if(mins<60) return `${mins}m ago`;
+  const hrs=Math.floor(mins/60); if(hrs<24) return `${hrs}h ago`;
+  const days=Math.floor(hrs/24); if(days<7) return `${days}d ago`;
+  return d.toLocaleDateString('en-PK',{day:'numeric',month:'short',year:'numeric'});
+}
+
+function parseRSSXML(xmlText,src) {
+  const parser=new DOMParser(), doc=parser.parseFromString(xmlText,'text/xml');
+  if(doc.querySelector('parsererror')) throw new Error('XML parse error');
+  const nodes=Array.from(doc.querySelectorAll('item, entry'));
+  return nodes.slice(0,30).map(node=>{
+    const get=tag=>node.querySelector(tag)?.textContent?.trim()||'';
+    const getAttr=(tag,attr)=>node.querySelector(tag)?.getAttribute(attr)||'';
+    const title=get('title').replace(/<!\[CDATA\[|\]\]>/g,'').trim();
+    let link=get('link')||getAttr('link','href')||src.url;
+    link=link.replace(/<!\[CDATA\[|\]\]>/g,'').trim();
+    const pubDate=get('pubDate')||get('published')||get('updated')||'';
+    const desc=stripHtml(get('description')||get('summary')||get('content')||'').trim().slice(0,1000);
+    let thumbnail=getAttr('thumbnail','url')||node.querySelector('[url]')?.getAttribute('url')||null;
+    const enclosure=node.querySelector('enclosure');
+    if(!thumbnail&&enclosure&&(enclosure.getAttribute('type')||'').startsWith('image')) thumbnail=enclosure.getAttribute('url');
+    return { title, source:src.name, sourceId:src.id, sourceColor:src.color, sourceUrl:src.url, articleUrl:link, pubDate, relTime:relTime(pubDate), description:desc, thumbnail, isOfficial:false, type:'news', filterKey:'news' };
+  }).filter(i=>i.title);
+}
+
+async function fetchSource(src) {
+  let lastErr=null;
+  for(const proxy of PROXIES) {
+    const url=proxy.base+encodeURIComponent(src.url);
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),9000);
+    try {
+      const res=await fetch(url,{signal:controller.signal});
+      clearTimeout(timer);
+      if(!res.ok){lastErr=new Error('HTTP '+res.status);continue;}
+      if(proxy.type==='rss2json'){
+        const json=await res.json();
+        if(json.status!=='ok'){lastErr=new Error(json.message||'rss2json error');continue;}
+        return (json.items||[]).map(item=>({
+          title:item.title||'', source:src.name, sourceId:src.id, sourceColor:src.color,
+          sourceUrl:json.feed?.link||src.url, articleUrl:item.link||src.url,
+          pubDate:item.pubDate||'', relTime:relTime(item.pubDate),
+          description:stripHtml(item.description||item.content||'').trim().slice(0,1000),
+          thumbnail:item.thumbnail||(item.enclosure?.type?.startsWith('image')?item.enclosure.link:null),
+          isOfficial:false, type:'news', filterKey:'news',
+        }));
+      } else {
+        const text=await res.text();
+        const items=parseRSSXML(text,src);
+        if(items.length===0){lastErr=new Error('empty feed');continue;}
+        return items;
+      }
+    } catch(e){clearTimeout(timer);lastErr=e;}
+  }
+  throw lastErr||new Error('All proxies failed for '+src.name);
+}
+
+async function loadTop(force) {
+  if(tabLoaded.top&&!force)return;
+  tabLoaded.top=false; topPage=0; allTopItems=[];
+  const grid=document.getElementById('grid-top');
+  setSkeleton(grid,6); setStatus('loading','Fetching education news from Pakistani sources…');
+  const topSources=RSS_SOURCES.filter(s=>s.cat.includes('top'));
+  const results=await Promise.allSettled(topSources.map(s=>fetchSource(s)));
+  let all=[],failed=0;
+  results.forEach((r,i)=>{
+    if(r.status==='fulfilled'){const edu=r.value.filter(isEduRelated);all=all.concat(edu.length>=2?edu:r.value.slice(0,3));}
+    else failed++;
+  });
+  all.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
+  const seen=new Set();
+  all=all.filter(item=>{const key=item.title.toLowerCase().slice(0,40);if(seen.has(key))return false;seen.add(key);return true;});
+  allTopItems=all; tabLoaded.top=true; topPage=0;
+  if(!all.length){
+    grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ico">📡</div><h3>Could not load news right now</h3><p style="margin-bottom:.8rem">All RSS proxies timed out. Try clicking <strong>Refresh</strong> or open Official Sources.</p></div>`;
+    setStatus('','Could not reach news sources — try refreshing'); return;
+  }
+  renderTopPage(grid);
+  const loaded=topSources.length-failed;
+  setStatus('live',`Loaded from ${loaded}/${topSources.length} sources · ${all.length} articles · Updated ${new Date().toLocaleTimeString()}`);
+  const el=document.getElementById('topUpdated'); if(el) el.textContent='Updated '+new Date().toLocaleTimeString();
+  if(failed>0) showToast(`ℹ️ ${failed} source(s) couldn't be reached — showing ${all.length} articles`);
+  else showToast(`✅ ${all.length} education articles loaded!`);
+}
+
+function renderTopPage(grid) {
+  const start=topPage*PAGE_SIZE, slice=allTopItems.slice(start,start+PAGE_SIZE);
+  if(topPage===0) grid.innerHTML='';
+  slice.forEach(item=>grid.appendChild(makeNewsCard(item)));
+  const moreBtn=document.getElementById('more-top');
+  moreBtn.style.display=(topPage+1)*PAGE_SIZE<allTopItems.length?'block':'none';
+}
+function loadMoreTop(){topPage++;renderTopPage(document.getElementById('grid-top'));applyFilter();}
+
+async function loadNews(force) {
+  if(tabLoaded.news&&!force)return; tabLoaded.news=false;
+  const grid=document.getElementById('grid-news'); setSkeleton(grid,4);
+  const newsSources=RSS_SOURCES.filter(s=>s.cat.includes('news'));
+  const results=await Promise.allSettled(newsSources.map(s=>fetchSource(s)));
+  let all=[]; results.forEach(r=>{if(r.status==='fulfilled') all=all.concat(r.value.slice(0,5));});
+  all.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
+  tabLoaded.news=true; grid.innerHTML='';
+  if(!all.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ico">📡</div><h3>Could not load feeds right now</h3><p>Click <strong>Refresh</strong> to try again.</p></div>`;return;}
+  all.forEach(item=>grid.appendChild(makeNewsCard(item))); applyFilter();
+}
+
+function loadOfficial() {
+  if(tabLoaded.official)return; tabLoaded.official=true;
+  const grid=document.getElementById('grid-official'); grid.innerHTML='';
+  OFFICIAL_SOURCES.forEach(src=>{
+    const card=document.createElement('div'); card.className='off-card';
+    card.dataset.filterKey='official'; card.dataset.text=(src.name+' '+src.desc).toLowerCase();
+    const links=src.links.map(l=>`<a href="${l.href}" target="_blank" rel="noopener" class="off-lbtn${l.primary?' primary':''}">${l.label}</a>`).join('');
+    card.innerHTML=`<div class="off-icon">${src.icon}</div><div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.2rem;"><div class="off-name">${src.name}</div><span class="src-badge sb-official">${src.badge}</span><span class="verified">✓ Official</span></div><div class="off-url">🔗 ${src.url}</div><div class="off-desc">${src.desc}</div><div class="off-links">${links}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function loadYoutube() {
+  if(tabLoaded.youtube)return; tabLoaded.youtube=true;
+  const grid=document.getElementById('grid-youtube'); grid.innerHTML='';
+  YT_CHANNELS.forEach(ch=>{
+    const card=document.createElement('div'); card.className='yt-card';
+    card.dataset.filterKey='yt'; card.dataset.text=(ch.name+' '+ch.desc+' '+ch.tags.join(' ')).toLowerCase();
+    const tags=ch.tags.map(t=>`<span class="yt-tag">${t}</span>`).join('');
+    card.innerHTML=`<div class="yt-header"><div class="yt-logo">▶</div><div><div class="yt-name">${ch.name}</div><div class="yt-subs">${ch.subs}</div></div></div><div class="yt-desc">${ch.desc}</div><div class="yt-tags">${tags}</div><div class="yt-foot"><a href="${ch.url}" target="_blank" rel="noopener" class="lbtn lb-yt">▶ Visit Channel</a><a href="${ch.search}" target="_blank" rel="noopener" class="lbtn lb-rel">🔍 Search Videos</a></div>`;
+    grid.appendChild(card);
+  });
+}
+
+function makeNewsCard(item) {
+  const card=document.createElement('div');
+  card.className=`ncard type-${item.sourceId||'news'}`;
+  card.dataset.filterKey=item.filterKey||'news';
+  card.dataset.text=(item.title+' '+item.description+' '+item.source).toLowerCase();
+  card.dataset.item=JSON.stringify(item);
+  card.addEventListener('click',function(e){if(e.target.tagName==='A')return;openReader(JSON.parse(this.dataset.item));});
+  const thumb=item.thumbnail?`<img class="ncard-thumb" src="${item.thumbnail}" alt="" loading="lazy" onerror="this.style.display='none'">`:'';
+  const officialBadge=item.isOfficial?'<span class="verified">✓ Official</span>':'';
+  card.innerHTML=`${thumb}<div class="ncard-body"><div class="ncard-meta"><span class="src-badge ${item.isOfficial?'sb-official':'sb-news'}">${esc(item.source)}</span>${officialBadge}<span class="time-ago">${esc(item.relTime||item.pubDate||'')}</span></div><div class="ncard-title">${esc(item.title)}</div>${item.description?`<div class="ncard-desc">${esc(item.description)}…</div>`:''}</div><div class="ncard-foot"><span class="lbtn lb-read" style="cursor:pointer" onclick="event.stopPropagation();openReader(JSON.parse(this.closest('.ncard').dataset.item))">📖 Read In App</span><a href="${item.articleUrl}" target="_blank" rel="noopener" class="lbtn lb-rel" onclick="event.stopPropagation()">🔗 Open</a><button class="save-btn${isSaved(item.articleUrl)?' saved':''}" onclick="event.stopPropagation();toggleSave(this,JSON.parse(this.closest('.ncard').dataset.item))">${isSaved(item.articleUrl)?'✓ Saved':'🔖 Save'}</button></div>`;
+  return card;
+}
+
+async function loadRecent(force) {
+  if(tabLoaded.recent&&!force)return; tabLoaded.recent=false;
+  const grid=document.getElementById('grid-recent');
+  const statusEl=document.getElementById('h24-status'), countEl=document.getElementById('h24-count');
+  grid.innerHTML=Array(6).fill('<div class="sk" style="height:130px;border-radius:10px"></div>').join('');
+  statusEl.textContent='Fetching from all sources…';
+  const recentSrcs=RSS_SOURCES.filter(s=>s.cat.includes('recent')||s.cat.includes('top'));
+  const results=await Promise.allSettled(recentSrcs.map(s=>fetchSource(s)));
+  const cutoff=Date.now()-24*60*60*1000; let all=[],failed=0;
+  results.forEach(r=>{if(r.status==='fulfilled'){r.value.forEach(item=>{const d=new Date(item.pubDate);if(!isNaN(d)&&d.getTime()>=cutoff)all.push(item);});}else failed++;});
+  const seen=new Set();
+  all=all.filter(item=>{const key=item.title.toLowerCase().slice(0,50);if(seen.has(key))return false;seen.add(key);return true;});
+  all.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
+  grid.innerHTML='';
+  if(!all.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ico">⏰</div><h3>No articles in the last 24 hours found</h3><p>Try refreshing.</p></div>`;statusEl.textContent='No recent articles found';return;}
+  all.forEach(item=>grid.appendChild(makeHeadlineCard(item))); tabLoaded.recent=true;
+  const now=new Date(); statusEl.textContent=`Updated ${now.toLocaleTimeString('en-PK')}`;
+  countEl.textContent=`${all.length} articles in the last 24 hours`;
+  const badge=document.getElementById('h24badge');
+  if(badge){badge.textContent=all.length;badge.style.display='inline-block';}
+}
+
+function makeHeadlineCard(item) {
+  const card=document.createElement('div'); card.className='hcard'; card.dataset.item=JSON.stringify(item);
+  const isIntl=['bbc','bbcworld','aljaz','reuters'].includes(item.sourceId);
+  const color=item.sourceColor||'var(--g)';
+  const minsAgo=Math.floor((Date.now()-new Date(item.pubDate))/60000);
+  const isNew=minsAgo<60, timeStr=item.relTime||'';
+  const srcCls=isIntl?'hcard-src intl':'hcard-src';
+  const flag=RSS_SOURCES.find(s=>s.id===item.sourceId)?.flag||'📰';
+  card.innerHTML=`<div class="hcard-top"><div class="hcard-accent" style="background:${color}"></div><div class="hcard-inner"><div class="hcard-meta"><span class="hcard-flag">${flag}</span><span class="${srcCls}">${esc(item.source)}</span>${isIntl?'<span style="font-size:.62rem;background:rgba(187,25,25,.1);color:#bb1919;padding:.1rem .38rem;border-radius:3px;font-weight:700">INTL</span>':'<span style="font-size:.62rem;background:rgba(26,92,56,.1);color:var(--gd);padding:.1rem .38rem;border-radius:3px;font-weight:700">PK</span>'}<span class="hcard-time${isNew?' new':''}">${isNew?'🔴 ':''}${esc(timeStr)}</span></div><div class="hcard-title">${esc(item.title)}</div>${item.description?`<div class="hcard-summary">${esc(item.description)}</div>`:''}</div></div><div class="hcard-foot"><button class="hcard-btn pri" onclick="event.stopPropagation();openReader(JSON.parse(this.closest('.hcard').dataset.item))">📖 Read In App</button><a class="hcard-btn sec" href="${item.articleUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 Open</a><button class="save-btn${isSaved(item.articleUrl)?' saved':''}" style="margin-left:auto" onclick="event.stopPropagation();toggleSave(this,JSON.parse(this.closest('.hcard').dataset.item),true)">${isSaved(item.articleUrl)?'✓ Saved':'🔖 Save'}</button></div>`;
+  card.addEventListener('click',function(e){if(e.target.tagName==='A'||e.target.tagName==='BUTTON')return;openReader(JSON.parse(this.dataset.item));});
+  return card;
+}
+
+function switchTab(tab) {
+  curTab=tab;
+  ['top','official','news','youtube','recent'].forEach(t=>{
+    document.getElementById(`tb-${t}`).classList.toggle('active',t===tab);
+    document.getElementById(`panel-${t}`).classList.toggle('active',t===tab);
+  });
+  if(tab==='official') loadOfficial();
+  else if(tab==='news') loadNews();
+  else if(tab==='youtube') loadYoutube();
+  else if(tab==='recent') loadRecent();
+  else if(tab==='top'&&!tabLoaded.top) loadTop();
+  else applyFilter();
+}
+
+async function refreshCurrent() {
+  const ico=document.getElementById('rfIco');
+  ico.style.cssText='display:inline-block;animation:spin 1s linear infinite';
+  tabLoaded[curTab]=false;
+  if(curTab==='official'){tabLoaded.official=false;loadOfficial();}
+  else if(curTab==='youtube'){tabLoaded.youtube=false;loadYoutube();}
+  else if(curTab==='news') await loadNews(true);
+  else if(curTab==='recent') await loadRecent(true);
+  else await loadTop(true);
+  ico.style.cssText='';
+}
+
+function setChip(btn) { activeFilter=btn.dataset.f; document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.f===activeFilter)); applyFilter(); }
+function applyFilter() {
+  const q=(document.getElementById('srchIn').value||'').toLowerCase().trim();
+  document.querySelectorAll('.ncard,.off-card,.yt-card').forEach(card=>{
+    const fk=card.dataset.filterKey||'';
+    const matchF=activeFilter==='all'||(activeFilter==='official'&&fk==='official')||(activeFilter==='news'&&fk==='news')||(activeFilter==='yt'&&fk==='yt');
+    const matchQ=!q||(card.dataset.text||'').includes(q);
+    card.style.display=matchF&&matchQ?'':'none';
+  });
+}
+function setStatus(state,msg){document.getElementById('statusDot').className='status-dot'+(state==='live'?' live':'');document.getElementById('statusTxt').textContent=msg;}
+function setSkeleton(grid,n){grid.innerHTML=Array(n).fill('<div class="sk sk-card"></div>').join('');}
+function toggleDrawer(){drawerOpen=!drawerOpen;document.getElementById('drawer').classList.toggle('open',drawerOpen);document.getElementById('overlay').classList.toggle('show',drawerOpen);document.getElementById('msBtn').classList.toggle('active',drawerOpen);document.getElementById('mainWrap').classList.toggle('drawer-open',drawerOpen&&window.innerWidth>900);}
+function drTab(name,btn){document.querySelectorAll('.dtool').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('active'));document.getElementById('dt-'+name).classList.add('active');btn.classList.add('active');}
+
+const ls={get:k=>{try{return JSON.parse(localStorage.getItem(k)||'[]');}catch{return[];}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
+
+function addNotice(){const title=document.getElementById('n-title').value.trim(),body=document.getElementById('n-body').value.trim();if(!title){showToast('⚠️ Enter a notice title first.');return;}const list=ls.get('scc_notices');list.unshift({id:Date.now(),title,body,date:new Date().toLocaleDateString('en-PK',{day:'numeric',month:'short',year:'numeric'})});ls.set('scc_notices',list);document.getElementById('n-title').value='';document.getElementById('n-body').value='';renderNotices();showToast('📌 Notice saved!');}
+function delNotice(id){ls.set('scc_notices',ls.get('scc_notices').filter(n=>n.id!==id));renderNotices();}
+function renderNotices(){const el=document.getElementById('notices-list'),items=ls.get('scc_notices');if(!items.length){el.innerHTML='<p class="ti-empty">No notices yet.</p>';return;}el.innerHTML=items.map(n=>`<div class="ti-item"><button class="ti-del" onclick="delNotice(${n.id})">✕</button><div class="ti-ititle">${esc(n.title)}</div>${n.body?`<div class="ti-ibody">${esc(n.body)}</div>`:''}<div class="ti-idate">📅 ${n.date}</div></div>`).join('');}
+
+function addEvent(){const date=document.getElementById('c-date').value,title=document.getElementById('c-title').value.trim(),body=document.getElementById('c-body').value.trim();if(!date||!title){showToast('⚠️ Enter date and event name.');return;}const list=ls.get('scc_cal');list.push({id:Date.now(),date,title,body});list.sort((a,b)=>a.date.localeCompare(b.date));ls.set('scc_cal',list);document.getElementById('c-date').value='';document.getElementById('c-title').value='';document.getElementById('c-body').value='';renderCal();showToast('📅 Event added!');}
+function delEvent(id){ls.set('scc_cal',ls.get('scc_cal').filter(e=>e.id!==id));renderCal();}
+function renderCal(){const el=document.getElementById('cal-list'),events=ls.get('scc_cal'),today=new Date().toISOString().slice(0,10);if(!events.length){el.innerHTML='<p class="ti-empty">No events yet.</p>';return;}el.innerHTML=events.map(e=>{const past=e.date<today,d=new Date(e.date+'T00:00:00').toLocaleDateString('en-PK',{weekday:'short',day:'numeric',month:'short',year:'numeric'});return`<div class="ti-item cal" style="${past?'opacity:.55':''}"><button class="ti-del" onclick="delEvent(${e.id})">✕</button><span class="date-pill">${d}</span><div class="ti-ititle">${esc(e.title)}${past?' <span style="font-size:.65rem;color:#bbb">(past)</span>':''}</div>${e.body?`<div class="ti-ibody">${esc(e.body)}</div>`:''}</div>`;}).join('');}
+
+function addFee(){const date=document.getElementById('f-date').value,amt=document.getElementById('f-amt').value.trim(),title=document.getElementById('f-title').value.trim();if(!title){showToast('⚠️ Enter a description.');return;}const list=ls.get('scc_fees');list.push({id:Date.now(),date,amt,title});list.sort((a,b)=>(a.date||'').localeCompare(b.date||''));ls.set('scc_fees',list);document.getElementById('f-date').value='';document.getElementById('f-amt').value='';document.getElementById('f-title').value='';renderFees();showToast('💰 Fee note saved!');}
+function delFee(id){ls.set('scc_fees',ls.get('scc_fees').filter(n=>n.id!==id));renderFees();}
+function renderFees(){const el=document.getElementById('fees-list'),items=ls.get('scc_fees');if(!items.length){el.innerHTML='<p class="ti-empty">No fee notes yet.</p>';return;}el.innerHTML=items.map(n=>{const d=n.date?new Date(n.date+'T00:00:00').toLocaleDateString('en-PK',{day:'numeric',month:'short',year:'numeric'}):'';return`<div class="ti-item fee"><button class="ti-del" onclick="delFee(${n.id})">✕</button>${n.amt?`<div class="amt">${esc(n.amt)}</div>`:''}<div class="ti-ititle">${esc(n.title)}</div>${d?`<div class="ti-idate">📅 Due: ${d}</div>`:''}</div>`;}).join('');}
+
+function isSaved(url){if(!url)return false;return ls.get('scc_saved').some(s=>s.url===url);}
+function updateSaveTabBadge(){const items=ls.get('scc_saved'),badge=document.getElementById('sv-tab-count');if(badge){badge.textContent=items.length;badge.style.display=items.length?'inline-block':'none';}}
+function toggleSave(btn,item,fromRecent){const url=item.articleUrl||'',saved=ls.get('scc_saved'),idx=saved.findIndex(s=>s.url===url);if(idx>-1){saved.splice(idx,1);ls.set('scc_saved',saved);btn.textContent='🔖 Save';btn.classList.remove('saved');showToast('Removed from Saved News');}else{saved.unshift({id:Date.now(),title:item.title||'Untitled',source:item.source||'',url,description:item.description||'',thumbnail:item.thumbnail||null,pubDate:item.pubDate||'',savedAt:new Date().toISOString(),notes:'',manual:false,fromRecent:!!fromRecent});ls.set('scc_saved',saved);btn.textContent='✓ Saved';btn.classList.add('saved');showToast('✅ Saved to My School → Saved News');}updateSaveTabBadge();renderSaved();}
+function saveFromReader(){const item=readerCurrentItem;if(!item)return;const url=item.articleUrl||'',saved=ls.get('scc_saved');if(saved.some(s=>s.url===url)){showToast('Already saved!');return;}saved.unshift({id:Date.now(),title:item.title||document.getElementById('readerTitle').textContent,source:item.source||'',url:url||'#',description:item.description||document.getElementById('readerExcerpt').textContent.slice(0,1000),thumbnail:item.thumbnail||null,pubDate:item.pubDate||'',savedAt:new Date().toISOString(),notes:'',manual:false,fromRecent:false});ls.set('scc_saved',saved);const btn=document.getElementById('readerSaveBtn');btn.textContent='✓ Saved';btn.classList.add('saved');showToast('✅ Saved to My School → Saved News');updateSaveTabBadge();renderSaved();}
+function addManualSaved(){const title=document.getElementById('sv-title').value.trim(),source=document.getElementById('sv-source').value.trim(),url=document.getElementById('sv-url').value.trim(),notes=document.getElementById('sv-notes').value.trim();if(!title){showToast('Please enter a headline');return;}const saved=ls.get('scc_saved');saved.unshift({id:Date.now(),title,source,url:url||'#',description:'',thumbnail:null,pubDate:'',savedAt:new Date().toISOString(),notes,manual:true,fromRecent:false});ls.set('scc_saved',saved);document.getElementById('sv-title').value='';document.getElementById('sv-source').value='';document.getElementById('sv-url').value='';document.getElementById('sv-notes').value='';renderSaved();updateSaveTabBadge();showToast('✅ News saved manually');}
+function delSaved(id){ls.set('scc_saved',ls.get('scc_saved').filter(s=>s.id!==id));renderSaved();updateSaveTabBadge();}
+function renderSaved(){const el=document.getElementById('saved-list');if(!el)return;const items=ls.get('scc_saved');if(!items.length){el.innerHTML='<p class="ti-empty">No saved news yet. Click 🔖 on any article to save it here permanently.</p>';return;}el.innerHTML=items.map(n=>{const d=n.savedAt?new Date(n.savedAt).toLocaleDateString('en-PK',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';const fromBadge=n.fromRecent?'<span class="sv-badge sv-badge-24h">⚡ 24h tab</span>':n.manual?'<span class="sv-badge sv-badge-manual">✏️ Manual</span>':'<span class="sv-badge sv-badge-src">📰 Saved</span>';const readBtn=n.url&&n.url!=='#'?`<button class="sv-btn pri" onclick="openSavedInReader(${n.id})">📖 Read In App</button><a class="sv-btn sec" href="${esc(n.url)}" target="_blank" rel="noopener">🔗 Open</a>`:'';return`<div class="sv-item"><button class="ti-del" onclick="delSaved(${n.id})" title="Remove">✕</button><div class="sv-item-title">${esc(n.title)}</div><div class="sv-item-meta">${n.source?`<span class="sv-badge sv-badge-src">${esc(n.source)}</span>`:''}${fromBadge}<span class="sv-date">Saved ${d}</span></div>${n.description?`<div class="sv-desc">${esc(n.description)}</div>`:''}${n.notes?`<div class="sv-notes">📝 ${esc(n.notes)}</div>`:''}<div class="sv-actions">${readBtn}</div></div>`;}).join('');}
+function openSavedInReader(id){const item=ls.get('scc_saved').find(s=>s.id===id);if(!item)return;openReader({title:item.title,source:item.source,articleUrl:item.url,description:item.description||item.notes,thumbnail:item.thumbnail,pubDate:item.pubDate,relTime:'',isOfficial:false});}
+
+let readerCurrentUrl='', readerCurrentItem=null;
+function openReader(item){
+  readerCurrentItem=item; readerCurrentUrl=item.articleUrl||'';
+  document.getElementById('readerTitle').textContent=item.title||'Article';
+  document.getElementById('readerOpenBtn').href=item.articleUrl||'#';
+  const meta=document.getElementById('readerMeta');
+  meta.innerHTML=`<span class="src-badge sb-news" style="background:rgba(255,255,255,.2);color:#fff">${esc(item.source)}</span>${item.isOfficial?'<span class="verified">✓ Official</span>':''}<span style="font-size:.7rem;color:rgba(255,255,255,.7)">${esc(item.relTime||item.pubDate||'')}</span>`;
+  const thumb=document.getElementById('readerThumb');
+  if(item.thumbnail){thumb.src=item.thumbnail;thumb.style.display='block';thumb.onerror=()=>{thumb.style.display='none';};}else{thumb.style.display='none';}
+  const excerpt=document.getElementById('readerExcerpt');
+  excerpt.textContent=item.description?item.description:'No preview available. Click "Load Full Article Text" to fetch the content, or open the original article.';
+  document.getElementById('readerFullText').style.display='none';
+  document.getElementById('readerFullText').textContent='';
+  document.getElementById('readerStatus').textContent='';
+  document.getElementById('readerFetchBtn').textContent='📄 Load Full Article Text';
+  document.getElementById('readerFetchBtn').disabled=false;
+  const saveBtn=document.getElementById('readerSaveBtn');
+  if(saveBtn){const already=isSaved(item.articleUrl);saveBtn.textContent=already?'✓ Already Saved':'🔖 Save to My School';saveBtn.classList.toggle('saved',already);}
+  document.getElementById('readerOverlay').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeReaderBtn(){document.getElementById('readerOverlay').classList.remove('show');document.body.style.overflow='';}
+function closeReader(e){if(e.target===document.getElementById('readerOverlay'))closeReaderBtn();}
+
+async function fetchFullText(){
+  if(!readerCurrentUrl)return;
+  const btn=document.getElementById('readerFetchBtn'),status=document.getElementById('readerStatus'),fullEl=document.getElementById('readerFullText');
+  btn.disabled=true; btn.textContent='⏳ Fetching…'; status.textContent='Trying to fetch article text…';
+  const proxies=['https://api.allorigins.win/raw?url=','https://corsproxy.io/?','https://api.codetabs.com/v1/proxy?quest='];
+  for(const proxy of proxies){
+    const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),12000);
+    try{
+      const res=await fetch(proxy+encodeURIComponent(readerCurrentUrl),{signal:controller.signal});
+      clearTimeout(timer); if(!res.ok)continue;
+      const html=await res.text(), doc=new DOMParser().parseFromString(html,'text/html');
+      doc.querySelectorAll('script,style,nav,header,footer,aside,iframe,noscript,figure,.ad,.advertisement,.sidebar,.related,.comments,.social,.share').forEach(el=>el.remove());
+      const content=doc.querySelector('article')||doc.querySelector('[class*="article-body"]')||doc.querySelector('[class*="story-body"]')||doc.querySelector('[class*="post-content"]')||doc.querySelector('[class*="entry-content"]')||doc.querySelector('main')||doc.querySelector('.content')||doc.body;
+      const text=(content?.innerText||content?.textContent||'').trim().replace(/\n{3,}/g,'\n\n').slice(0,4000);
+      if(text.length>100){fullEl.textContent=text+(text.length===4000?'\n\n[…article continues — click "Open Original Article" to read the rest]':'');fullEl.style.display='block';status.textContent=`Fetched via ${new URL('https://'+proxy.split('//')[1]).hostname}`;btn.textContent='✅ Loaded';return;}
+    }catch(e){clearTimeout(timer);}
+  }
+  status.textContent='Could not fetch article text — try "Open Original Article"';
+  btn.textContent='📄 Load Full Article Text'; btn.disabled=false;
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3400);}
+document.head.insertAdjacentHTML('beforeend','<style>@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}</style>');
+
+document.addEventListener('DOMContentLoaded',()=>{renderNotices();renderCal();renderFees();renderSaved();updateSaveTabBadge();loadTop();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeReaderBtn();});
+
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});}
+</script>
+</body>
+</html>

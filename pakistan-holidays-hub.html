@@ -343,6 +343,66 @@
     }
     .toast.show { transform:translateY(0); opacity:1; }
 
+    /* ─── Live Alerts Panel ──────────────────────────── */
+    .live-alerts-wrap {
+      background:#fff; border-bottom:1px solid #ebebeb;
+      padding:.6rem 2rem .9rem;
+    }
+    .alerts-bar {
+      display:flex; align-items:center; justify-content:space-between;
+      gap:1rem; margin-bottom:.6rem;
+    }
+    .alerts-bar-left { display:flex; align-items:center; gap:.75rem; }
+    .alerts-title-text {
+      font-weight:700; font-size:.88rem; color:#b91c1c; letter-spacing:.02em;
+    }
+    .alerts-status { font-size:.78rem; color:var(--tl); }
+    .pulse-dot {
+      width:10px; height:10px; border-radius:50%;
+      background:#22c55e; display:inline-block;
+      box-shadow:0 0 0 0 rgba(34,197,94,.6);
+    }
+    .pulse-dot.scanning { background:#f59e0b; animation:pulseA 1.2s ease-in-out infinite; }
+    .pulse-dot.found    { background:#ef4444; animation:pulseA .9s ease-in-out infinite; }
+    @keyframes pulseA {
+      0%,100% { box-shadow:0 0 0 0 rgba(239,68,68,.5); }
+      50%      { box-shadow:0 0 0 8px rgba(239,68,68,0); }
+    }
+    .scan-btn {
+      padding:.38rem .9rem; border:none; border-radius:6px; cursor:pointer;
+      background:var(--g); color:#fff; font-size:.78rem; font-weight:600;
+      transition:background .2s;
+    }
+    .scan-btn:hover { background:var(--gd); }
+    .scan-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .alerts-list { display:flex; flex-direction:column; gap:.5rem; }
+    .alert-card {
+      border-radius:8px; padding:.65rem 1rem;
+      font-size:.82rem; display:flex; flex-direction:column; gap:.2rem;
+      border-left:4px solid #ef4444;
+    }
+    .alert-card.breaking { background:#fff5f5; border-left-color:#dc2626; }
+    .alert-card.recent   { background:#fffbeb; border-left-color:#d97706; }
+    .alert-card-hdr { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+    .alert-tag {
+      font-size:.65rem; font-weight:700; padding:.1rem .45rem; border-radius:20px;
+      text-transform:uppercase; letter-spacing:.04em;
+    }
+    .tag-breaking { background:#dc2626; color:#fff; }
+    .tag-recent   { background:#d97706; color:#fff; }
+    .alert-source { font-size:.68rem; color:var(--tl); margin-left:auto; }
+    .alert-title  { font-weight:600; color:var(--td); line-height:1.35; }
+    .alert-prov   { font-size:.7rem; color:var(--tl); }
+    .scanning-indicator {
+      display:flex; align-items:center; gap:.7rem; color:var(--tl);
+      font-size:.82rem; padding:.3rem 0;
+    }
+    .scan-spinner {
+      width:14px; height:14px; border:2px solid #e5e5e5;
+      border-top-color:var(--g); border-radius:50%; animation:spin 1s linear infinite;
+    }
+    .no-alerts-msg { color:var(--tl); font-size:.82rem; padding:.3rem 0; }
+
     /* ─── Footer ─────────────────────────────────────── */
     .foot {
       background:#fff; border-top:1px solid #ebebeb;
@@ -454,6 +514,24 @@
     <div class="cd-unit"><span class="cd-num" id="cdH">--</span><span class="cd-text">Hours</span></div>
     <div class="cd-unit"><span class="cd-num" id="cdM">--</span><span class="cd-text">Mins</span></div>
     <div class="cd-unit"><span class="cd-num" id="cdS">--</span><span class="cd-text">Secs</span></div>
+  </div>
+</div>
+
+<!-- ════════════════ LIVE ALERTS ════════════════════ -->
+<div class="live-alerts-wrap">
+  <div class="alerts-bar">
+    <div class="alerts-bar-left">
+      <span class="pulse-dot" id="alertDot"></span>
+      <span class="alerts-title-text">🔴 Live Holiday Alerts</span>
+      <span class="alerts-status" id="alertsStatus">Starting scan…</span>
+    </div>
+    <button class="scan-btn" id="scanBtn" onclick="manualScan()">⚡ Scan Now</button>
+  </div>
+  <div class="alerts-list" id="alertsList">
+    <div class="scanning-indicator" id="scanningInd">
+      <div class="scan-spinner"></div>
+      <span>Checking Dawn, Geo, ARY, The News &amp; more for new holiday announcements…</span>
+    </div>
   </div>
 </div>
 
@@ -808,22 +886,244 @@ function tryParseJSON(text) {
 }
 
 /* ─────────────────────────────────────────────────────────
+   LIVE RSS ALERT SYSTEM
+───────────────────────────────────────────────────────── */
+const HOLIDAY_NEWS_SOURCES = [
+  { name:'Dawn',            url:'https://www.dawn.com/feeds/1452/rss' },
+  { name:'Geo News',        url:'https://www.geo.tv/rss/1/0' },
+  { name:'ARY News',        url:'https://arynews.tv/feed/' },
+  { name:'The News',        url:'https://www.thenews.com.pk/rss/1/1' },
+  { name:'Express Tribune', url:'https://tribune.com.pk/feed/' },
+  { name:'Samaa TV',        url:'https://www.samaa.tv/feed/' },
+  { name:'Express Urdu',    url:'https://www.express.pk/feed/' },
+  { name:'Pakistan Today',  url:'https://www.pakistantoday.com.pk/feed/' },
+  { name:'Duniya News',     url:'https://dunyanews.tv/index.php/en/Pakistan?format=feed&type=rss' },
+];
+
+const HOLIDAY_KEYWORDS_EN = [
+  'public holiday','government holiday','holiday announced','holiday declared',
+  'holiday notification','holiday gazetted','holiday observed','official holiday',
+  'emergency holiday','unexpected holiday','additional holiday','special holiday',
+  'half day holiday','schools closed','offices closed','banks closed',
+  'holiday tomorrow','holiday today','holiday notification','holiday orders',
+  'NCOC holiday','holiday Punjab','holiday Sindh','holiday KPK','holiday Balochistan',
+  'curfew holiday','federal holiday','provincial holiday','holiday gazette',
+  'unexpected closure','unplanned holiday','surprise holiday','holiday extended',
+  'holiday compensation','compensatory holiday','extra holiday'
+];
+
+const HOLIDAY_KEYWORDS_UR = [
+  'سرکاری تعطیل','عام تعطیل','تعطیل کا اعلان','اسکول بند','دفاتر بند',
+  'بینک بند','کل تعطیل','آج تعطیل','صوبائی تعطیل','قومی تعطیل',
+  'غیر متوقع تعطیل','اضافی تعطیل'
+];
+
+const PROV_MAP = {
+  'punjab': ['punjab','lahore','faisalabad','rawalpindi','multan','gujranwala'],
+  'sindh':  ['sindh','karachi','hyderabad','sukkur','larkana'],
+  'kpk':    ['kpk','khyber','peshawar','swat','abbottabad','khyber pakhtunkhwa'],
+  'balochistan': ['balochistan','quetta','gwadar']
+};
+
+let detectedAlerts = [];
+let isScanning = false;
+
+function loadCachedAlerts() {
+  try {
+    const raw = localStorage.getItem('pakhub_alerts');
+    if (raw) { detectedAlerts = JSON.parse(raw); }
+  } catch(_) { detectedAlerts = []; }
+}
+
+function saveCachedAlerts() {
+  try { localStorage.setItem('pakhub_alerts', JSON.stringify(detectedAlerts.slice(0,30))); }
+  catch(_) {}
+}
+
+async function fetchRSSItems(source) {
+  const proxies = [
+    `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}&count=25`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(source.url)}`,
+    `https://corsproxy.io/?${encodeURIComponent(source.url)}`
+  ];
+
+  // Proxy 1 — rss2json (returns JSON directly)
+  try {
+    const r = await fetch(proxies[0], { signal: AbortSignal.timeout(9000) });
+    if (r.ok) {
+      const d = await r.json();
+      if (d.status === 'ok' && d.items && d.items.length) {
+        return d.items.map(i => ({
+          title: i.title || '',
+          desc:  i.description || i.content || '',
+          link:  i.link || '',
+          pubDate: i.pubDate || '',
+          source: source.name
+        }));
+      }
+    }
+  } catch(_) {}
+
+  // Proxy 2 & 3 — raw XML
+  for (const proxyUrl of [proxies[1], proxies[2]]) {
+    try {
+      const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(9000) });
+      if (!r.ok) continue;
+      const xml = await r.text();
+      const doc = new DOMParser().parseFromString(xml, 'text/xml');
+      const items = doc.querySelectorAll('item');
+      if (!items.length) continue;
+      return Array.from(items).slice(0, 25).map(el => ({
+        title:   el.querySelector('title')?.textContent || '',
+        desc:    el.querySelector('description')?.textContent || '',
+        link:    el.querySelector('link')?.textContent || '',
+        pubDate: el.querySelector('pubDate')?.textContent || '',
+        source:  source.name
+      }));
+    } catch(_) {}
+  }
+  return [];
+}
+
+function isHolidayRelated(title, desc) {
+  const combined = (title + ' ' + desc).toLowerCase();
+  const pakCheck = combined.includes('pakistan') || combined.includes('پاکستان') ||
+    Object.values(PROV_MAP).flat().some(w => combined.includes(w));
+  if (!pakCheck) return false;
+  const enMatch = HOLIDAY_KEYWORDS_EN.some(kw => combined.includes(kw.toLowerCase()));
+  const urMatch = HOLIDAY_KEYWORDS_UR.some(kw => combined.includes(kw));
+  return enMatch || urMatch;
+}
+
+function detectProvince(text) {
+  const t = text.toLowerCase();
+  for (const [prov, kws] of Object.entries(PROV_MAP)) {
+    if (kws.some(kw => t.includes(kw))) return prov.charAt(0).toUpperCase() + prov.slice(1);
+  }
+  return 'All Provinces';
+}
+
+async function scanNewsForHolidays() {
+  if (isScanning) return;
+  isScanning = true;
+  setScanUI('scanning');
+
+  let newFound = 0;
+  for (const src of HOLIDAY_NEWS_SOURCES) {
+    try {
+      const items = await fetchRSSItems(src);
+      for (const item of items) {
+        if (!isHolidayRelated(item.title, item.desc)) continue;
+        const id = btoa(encodeURIComponent(item.title)).slice(0, 32);
+        if (detectedAlerts.some(a => a.id === id)) continue;
+        const pubMs = item.pubDate ? new Date(item.pubDate).getTime() : Date.now();
+        detectedAlerts.unshift({
+          id, title: item.title, source: item.source,
+          link: item.link, pubDate: item.pubDate,
+          province: detectProvince(item.title + ' ' + item.desc),
+          ageMs: Date.now() - pubMs
+        });
+        newFound++;
+      }
+    } catch(_) {}
+  }
+
+  detectedAlerts.sort((a,b) => a.ageMs - b.ageMs);
+  detectedAlerts = detectedAlerts.slice(0, 20);
+  saveCachedAlerts();
+
+  const lastScanTime = new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+  localStorage.setItem('pakhub_lastScan', lastScanTime);
+
+  isScanning = false;
+  renderAlerts();
+  setScanUI(detectedAlerts.length ? 'found' : 'idle');
+
+  if (newFound > 0) showToast(`🔔 ${newFound} new holiday alert${newFound>1?'s':''} detected!`);
+
+  document.getElementById('alertsStatus').textContent =
+    `Last scan: ${lastScanTime} · ${detectedAlerts.length} alert${detectedAlerts.length!==1?'s':''}`;
+}
+
+function setScanUI(state) {
+  const dot = document.getElementById('alertDot');
+  const btn = document.getElementById('scanBtn');
+  if (!dot) return;
+  dot.className = 'pulse-dot' + (state === 'scanning' ? ' scanning' : state === 'found' ? ' found' : '');
+  if (btn) btn.disabled = (state === 'scanning');
+}
+
+function renderAlerts() {
+  const list = document.getElementById('alertsList');
+  const ind  = document.getElementById('scanningInd');
+  if (!list) return;
+  if (ind) ind.style.display = 'none';
+
+  if (!detectedAlerts.length) {
+    list.innerHTML = '<div class="no-alerts-msg">✅ No unofficial holiday announcements detected. Auto-scan runs every 2 hours.</div>';
+    return;
+  }
+
+  list.innerHTML = detectedAlerts.map(a => {
+    const isBreaking = a.ageMs < 24 * 3600 * 1000;
+    const cls  = isBreaking ? 'breaking' : 'recent';
+    const tag  = isBreaking ? 'tag-breaking' : 'tag-recent';
+    const lbl  = isBreaking ? '🔴 BREAKING' : '🟡 RECENT';
+    return `
+      <div class="alert-card ${cls}">
+        <div class="alert-card-hdr">
+          <span class="alert-tag ${tag}">${lbl}</span>
+          <span class="alert-source">📰 ${a.source}</span>
+        </div>
+        <div class="alert-title">
+          ${a.link ? `<a href="${a.link}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${a.title}</a>` : a.title}
+        </div>
+        <div class="alert-prov">📍 ${a.province}</div>
+      </div>`;
+  }).join('');
+}
+
+function manualScan() {
+  detectedAlerts = [];
+  document.getElementById('alertsList').innerHTML =
+    '<div class="scanning-indicator"><div class="scan-spinner"></div><span>Scanning news sources…</span></div>';
+  document.getElementById('alertsStatus').textContent = 'Scanning now…';
+  scanNewsForHolidays();
+}
+
+/* ─────────────────────────────────────────────────────────
    INIT / REFRESH
 ───────────────────────────────────────────────────────── */
 async function init() {
-  showSkeleton();
+  // Show fallback data immediately — no waiting
+  DATA = FALLBACK;
+  renderAll();
+  setLastUpdated('Local calendar data');
+  document.getElementById('apikeyBox').style.display = 'none';
+
+  // Load cached alerts
+  loadCachedAlerts();
+  if (detectedAlerts.length) {
+    renderAlerts();
+    const lastScan = localStorage.getItem('pakhub_lastScan') || '';
+    document.getElementById('alertsStatus').textContent =
+      `Last scan: ${lastScan} · ${detectedAlerts.length} alert${detectedAlerts.length!==1?'s':''}`;
+    setScanUI('found');
+  }
+
+  // Kick off RSS scan in background
+  scanNewsForHolidays();
+  // Auto-rescan every 2 hours
+  setInterval(scanNewsForHolidays, 2 * 60 * 60 * 1000);
+
+  // Also try AI for richer data (no API key required for fallback)
   try {
-    DATA = await fetchFromAI();
+    const fresh = await fetchFromAI();
+    DATA = fresh;
     renderAll();
     setLastUpdated('Live — Anthropic AI + web search');
-    showToast('✅ Holiday data loaded successfully!');
-  } catch (e) {
-    console.warn('AI fetch failed, using fallback data:', e);
-    DATA = FALLBACK;
-    renderAll();
-    setLastUpdated('Cached data (live fetch unavailable)');
-    showToast('ℹ️ Showing cached data. Enter API key above for live updates.');
-    document.getElementById('apikeyBox').style.display = 'flex';
+  } catch(_) {
+    // fallback already shown — silently ignore
   }
 }
 

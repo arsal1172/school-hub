@@ -1,0 +1,107 @@
+name: Update News Cache
+
+on:
+  schedule:
+    - cron: '0 2,8,14,20 * * *'   # Runs 4x/day: 7am, 1pm, 7pm, 1am Pakistan time
+  workflow_dispatch:               # Also allows manual run from GitHub Actions tab
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch RSS feeds and build news-data.json
+        run: |
+          python3 - <<'PYEOF'
+          import urllib.request, xml.etree.ElementTree as ET, json, re
+          from datetime import datetime, timezone
+
+          SOURCES = [
+            {'id':'gnews_edu',     'name':'Google News Education', 'color':'#4285f4', 'flag':'🇵🇰',
+             'url':'https://news.google.com/rss/search?q=pakistan+school+education+BISE&hl=en-PK&gl=PK&ceid=PK:en'},
+            {'id':'gnews_holiday', 'name':'Google News Holidays',  'color':'#34a853', 'flag':'🇵🇰',
+             'url':'https://news.google.com/rss/search?q=pakistan+government+holiday+school+closed&hl=en-PK&gl=PK&ceid=PK:en'},
+            {'id':'gnews_fsd',     'name':'Google News Punjab',    'color':'#fbbc04', 'flag':'🇵🇰',
+             'url':'https://news.google.com/rss/search?q=Punjab+BISE+Faisalabad+matric+education&hl=en-PK&gl=PK&ceid=PK:en'},
+            {'id':'dawn',    'name':'Dawn',            'color':'#c62828', 'flag':'🇵🇰', 'url':'https://www.dawn.com/feeds/home'},
+            {'id':'geo',     'name':'Geo News',        'color':'#1565c0', 'flag':'🇵🇰', 'url':'https://www.geo.tv/rss/1/1'},
+            {'id':'ary',     'name':'ARY News',        'color':'#f57f17', 'flag':'🇵🇰', 'url':'https://arynews.tv/feed/'},
+            {'id':'tribune', 'name':'Express Tribune', 'color':'#6a1b9a', 'flag':'🇵🇰', 'url':'https://tribune.com.pk/feeds/latest'},
+            {'id':'thenews', 'name':'The News',        'color':'#0277bd', 'flag':'🇵🇰', 'url':'https://www.thenews.com.pk/rss/1/7'},
+            {'id':'dpak',    'name':'Daily Pakistan',  'color':'#2e7d32', 'flag':'🇵🇰', 'url':'https://en.dailypakistan.com.pk/feed/'},
+            {'id':'pktoday', 'name':'Pakistan Today',  'color':'#4a148c', 'flag':'🇵🇰', 'url':'https://www.pakistantoday.com.pk/feed/'},
+            {'id':'ilm',     'name':'Ilm Ki Dunya',    'color':'#1a5c38', 'flag':'🇵🇰', 'url':'https://www.ilmkidunya.com/feed/'},
+          ]
+
+          EDU_KW = ['school','education','student','teacher','exam','board','bise','matric',
+                    'holiday','vacation','syllabus','result','fee','admission','punjab','sed',
+                    'pctb','pec','scholarship','class','grade','academic','textbook','datesheet',
+                    'date sheet','registration','challan','annual','supplementary']
+
+          def strip_html(text):
+            return re.sub(r'<[^>]+>', '', text or '').strip()[:600]
+
+          def is_edu(title, desc):
+            t = (title + ' ' + desc).lower()
+            return any(k in t for k in EDU_KW)
+
+          all_items = []
+          for src in SOURCES:
+            try:
+              req = urllib.request.Request(
+                src['url'],
+                headers={'User-Agent': 'Mozilla/5.0 (compatible; SchoolHub-NewsBot/1.0)'}
+              )
+              with urllib.request.urlopen(req, timeout=20) as r:
+                raw = r.read()
+              root = ET.fromstring(raw)
+              count = 0
+              for item in root.findall('.//item'):
+                title = (item.findtext('title') or '').strip()
+                if not title or title == 'RSS': continue
+                link  = (item.findtext('link')    or src['url']).strip()
+                pub   = (item.findtext('pubDate') or '').strip()
+                desc  = strip_html(item.findtext('description') or '')
+                if src['id'] not in ('gnews_edu','gnews_holiday','gnews_fsd') and not is_edu(title, desc):
+                  continue
+                all_items.append({
+                  'title': title, 'source': src['name'], 'sourceId': src['id'],
+                  'sourceColor': src['color'], 'flag': src['flag'],
+                  'articleUrl': link, 'pubDate': pub, 'description': desc,
+                  'filterKey': 'news', 'type': 'news', 'isOfficial': False
+                })
+                count += 1
+                if count >= 25: break
+              print(f"  OK  {src['name']:25s}  {count} items")
+            except Exception as e:
+              print(f"  FAIL {src['name']:24s}  {e}")
+
+          all_items.sort(key=lambda x: x.get('pubDate',''), reverse=True)
+          seen, deduped = set(), []
+          for item in all_items:
+            key = item['title'].lower()[:50]
+            if key not in seen:
+              seen.add(key)
+              deduped.append(item)
+
+          output = {
+            'updated': datetime.now(timezone.utc).isoformat(),
+            'count':   len(deduped),
+            'items':   deduped[:80]
+          }
+          with open('news-data.json', 'w', encoding='utf-8') as f:
+            json.dump(output, f, ensure_ascii=False)
+          print(f"Saved {len(deduped)} articles to news-data.json")
+          PYEOF
+
+      - name: Commit and push news-data.json
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name  "github-actions[bot]"
+          git add news-data.json
+          git diff --staged --quiet || git commit -m "chore: update news cache $(date -u +'%Y-%m-%d %H:%M UTC') [skip ci]"
+          git push
